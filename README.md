@@ -1,6 +1,6 @@
 # AR Support Calculator (childsupportcalculator)
 
-An Arkansas Child Support Calculator
+An Arkansas Child Support Calculator using Vue 3 and Quasar 2.0. More info to come when I get a chance.
 
 ## Install the dependencies
 
