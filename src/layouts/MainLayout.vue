@@ -2,7 +2,14 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
-        <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
+        <q-btn
+          flat
+          dense
+          round
+          icon="menu"
+          aria-label="Menu"
+          @click="toggleLeftDrawer"
+        />
 
         <q-toolbar-title>Troutt Law Firm</q-toolbar-title>
 
@@ -14,7 +21,11 @@
       <q-list>
         <q-item-label header>Essential Links</q-item-label>
 
-        <EssentialLink v-for="link in essentialLinks" :key="link.title" v-bind="link" />
+        <EssentialLink
+          v-for="link in essentialLinks"
+          :key="link.title"
+          v-bind="link"
+        />
       </q-list>
     </q-drawer>
 
@@ -32,20 +43,20 @@ const linksList = [
     title: "Home",
     caption: "Troutt Law Firm Home Page",
     icon: "home",
-    internalLink: "/"
+    internalLink: "/",
   },
   {
     title: "Child Support Calculator",
     caption: "Current Arkansas Support Calculator",
     icon: "calculate",
-    internalLink: "/calc"
+    internalLink: "/calc",
   },
   {
     title: "Github",
     caption: "github.com/quasarframework",
     icon: "code",
-    link: "https://github.com/quasarframework"
-  }
+    link: "https://github.com/quasarframework",
+  },
 ];
 
 import { defineComponent, ref } from "vue";
@@ -54,7 +65,7 @@ export default defineComponent({
   name: "MainLayout",
 
   components: {
-    EssentialLink
+    EssentialLink,
   },
 
   setup() {
@@ -65,8 +76,8 @@ export default defineComponent({
       leftDrawerOpen,
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value;
-      }
+      },
     };
-  }
+  },
 });
 </script>

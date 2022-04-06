@@ -69,20 +69,39 @@
         </div>
       </div>
     </div>
-    <p
-      class="row"
-    >Plaintiff's Monthly Gross Income: {{ GrossIncome.plaintiff }}, which is {{ GrossPercentage.plaintiff }}</p>
-    <p
-      class="row"
-    >Defendant's Monthly Gross Income: {{ GrossIncome.defendant }}, which is {{ GrossPercentage.defendant }}</p>
-    <p
-      class="row"
-    >Combined Monthly Gross Income: {{ GrossIncome.combined }}. Rounded for support purposes is {{ RoundIncome.total }}</p>
+    <p class="row">
+      Plaintiff's Monthly Gross Income: {{ GrossIncome.plaintiff }}, which is
+      {{ GrossPercentage.plaintiff }}
+    </p>
+    <p class="row">
+      Defendant's Monthly Gross Income: {{ GrossIncome.defendant }}, which is
+      {{ GrossPercentage.defendant }}
+    </p>
+    <p class="row">
+      Combined Monthly Gross Income: {{ GrossIncome.combined }}. Rounded for
+      support purposes is {{ RoundIncome.total }}
+    </p>
     <p class="row">total support is {{ PresumedSupport }}</p>
-    <p
-      class="q-pa-md shadow-1"
-      style="max-width: 624px"
-    >The court has determined that Plaintiff (payor) earns a gross income of {{ GrossIncome.plaintiff }} per month and Defendant (payee) earns a gross income of {{GrossIncome.defendant}} per month. Therefore, the parents’ combined gross income is {{GrossIncome.combined}} with a basic child-support obligation of {{PresumedSupport}} for their one child per the Chart. The court also finds that Plaintiff (payor) is paying for the child’s health insurance premium in the amount of $100 per month and that Defendant (payee) is paying $200 for childcare expenses, for a total of $300 for additional child-rearing expenses. Plaintiff (payor) is responsible for 66% of the total obligation ($312.67 share of basic obligation plus $200 for expenses) and has a total child-support obligation of $512.67. Defendant (payee) is responsible for 33% of the total obligation ($156.33 share of basic obligation plus $100 for expenses) and has a total child-support obligation of $256.33. Plaintiff, as the payor, shall receive a $100 credit for the additional child-rearing expenses that he is paying out of pocket. Plaintiff shall pay $412 per month to Defendant beginning on March 1, 2020, and he shall continue to cover the child’s health insurance premium.</p>
+    <p class="q-pa-md shadow-1" style="max-width: 624px">
+      The court has determined that Plaintiff (payor) earns a gross income of
+      {{ GrossIncome.plaintiff }} per month and Defendant (payee) earns a gross
+      income of {{ GrossIncome.defendant }} per month. Therefore, the parents’
+      combined gross income is {{ GrossIncome.combined }} with a basic
+      child-support obligation of {{ PresumedSupport }} for their one child per
+      the Chart. The court also finds that Plaintiff (payor) is paying for the
+      child’s health insurance premium in the amount of $100 per month and that
+      Defendant (payee) is paying $200 for childcare expenses, for a total of
+      $300 for additional child-rearing expenses. Plaintiff (payor) is
+      responsible for 66% of the total obligation ($312.67 share of basic
+      obligation plus $200 for expenses) and has a total child-support
+      obligation of $512.67. Defendant (payee) is responsible for 33% of the
+      total obligation ($156.33 share of basic obligation plus $100 for
+      expenses) and has a total child-support obligation of $256.33. Plaintiff,
+      as the payor, shall receive a $100 credit for the additional child-rearing
+      expenses that he is paying out of pocket. Plaintiff shall pay $412 per
+      month to Defendant beginning on March 1, 2020, and he shall continue to
+      cover the child’s health insurance premium.
+    </p>
   </q-page>
 </template>
 
@@ -104,10 +123,10 @@ export default {
         { label: "Weekly", value: 4.334 },
         { label: "Biweekly", value: 2.167 },
         { label: "Semimonthly", value: 2 },
-        { label: "Monthly", value: 1 }
+        { label: "Monthly", value: 1 },
       ],
       pDeductions: ref(null),
-      dDeductions: ref(null)
+      dDeductions: ref(null),
     };
   },
   computed: {
@@ -117,18 +136,18 @@ export default {
         defendant: (this.dIncome - this.dDeductions) * this.dPayPeriod.value,
         combined:
           (this.pIncome - this.pDeductions) * this.pPayPeriod.value +
-          (this.dIncome - this.dDeductions) * this.dPayPeriod.value
+          (this.dIncome - this.dDeductions) * this.dPayPeriod.value,
       };
     },
     GrossPercentage() {
       return {
         plaintiff: this.GrossIncome.plaintiff / this.GrossIncome.combined,
-        defendant: this.GrossIncome.defendant / this.GrossIncome.combined
+        defendant: this.GrossIncome.defendant / this.GrossIncome.combined,
       };
     },
     RoundIncome() {
       return {
-        total: Math.floor(this.GrossIncome.combined / 50) * 50
+        total: Math.floor(this.GrossIncome.combined / 50) * 50,
       };
     },
     PresumedSupport() {
@@ -144,8 +163,8 @@ export default {
       }
 
       return 125;
-    }
+    },
   },
-  name: "PageCalculator"
+  name: "PageCalculator",
 };
 </script>

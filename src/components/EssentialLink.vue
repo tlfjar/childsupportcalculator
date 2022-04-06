@@ -19,7 +19,7 @@
       <q-item-label caption>{{ caption }}</q-item-label>
     </q-item-section>
   </q-item>
-</template> 
+</template>
 
 <script>
 import { defineComponent } from "vue";
@@ -29,28 +29,28 @@ export default defineComponent({
   props: {
     title: {
       type: String,
-      required: true
+      required: true,
     },
 
     caption: {
       type: String,
-      default: ""
+      default: "",
     },
 
     link: {
       type: String,
-      default: ""
+      default: "",
     },
 
     internalLink: {
       type: String,
-      default: "#"
+      default: "#",
     },
 
     icon: {
       type: String,
-      default: ""
-    }
-  }
+      default: "",
+    },
+  },
 });
 </script>
