@@ -5,10 +5,11 @@
         class="fit row justify-center items-center content-start q-py-sm q-mx-sm q-mb-md shadow-1"
         style="min-width: 624px; max-width: 1280px"
       >
-        <q-input
-          outlined
+        <q-select
+          filled
           class="col-4 q-gutter-sm q-col-gutter-sm"
           v-model="partiesChildren"
+          :options="childrenoptions"
           label="Number of Children"
         />
       </div>
@@ -36,6 +37,13 @@
             class="col-8 q-gutter-sm q-col-gutter-sm"
             v-model="pDeductions"
             label="Allowed Deductions (per pay period)"
+          />
+          <q-select
+            filled
+            class="col-4 q-gutter-sm q-col-gutter-sm"
+            v-model="pType"
+            :options="typeoptions"
+            label="Payor/Payee"
           />
           <div class="col-4" />
         </div>
@@ -65,6 +73,13 @@
             v-model="dDeductions"
             label="Allowed Deductions (per pay period)"
           />
+          <q-select
+            filled
+            class="col-4 q-gutter-sm q-col-gutter-sm"
+            v-model="dType"
+            :options="typeoptions"
+            label="Payor/Payee"
+          />
           <div class="col-4" />
         </div>
       </div>
@@ -82,19 +97,19 @@
       support purposes is {{ RoundIncome.total }}
     </p>
     <p class="row">total support is {{ PresumedSupport }}</p>
-    <p class="q-pa-md shadow-1" style="max-width: 624px">
-      The court has determined that Plaintiff (payor) earns a gross income of
-      {{ GrossIncome.plaintiff }} per month and Defendant (payee) earns a gross
+    <p class="q-pa-md shadow-2" style="max-width: 624px">
+      The court has determined that Plaintiff ({{pType.label}}) earns a gross income of
+      {{ GrossIncome.plaintiff }} per month and Defendant ({{dType.label}}) earns a gross
       income of {{ GrossIncome.defendant }} per month. Therefore, the parents’
       combined gross income is {{ GrossIncome.combined }} with a basic
       child-support obligation of {{ PresumedSupport }} for their one child per
-      the Chart. The court also finds that Plaintiff (payor) is paying for the
+      the Chart. The court also finds that Plaintiff ({{pType.label}}) is paying for the
       child’s health insurance premium in the amount of $100 per month and that
-      Defendant (payee) is paying $200 for childcare expenses, for a total of
-      $300 for additional child-rearing expenses. Plaintiff (payor) is
+      Defendant ({{dType.label}}) is paying $200 for childcare expenses, for a total of
+      $300 for additional child-rearing expenses. Plaintiff ({{pType.label}}) is
       responsible for 66% of the total obligation ($312.67 share of basic
       obligation plus $200 for expenses) and has a total child-support
-      obligation of $512.67. Defendant (payee) is responsible for 33% of the
+      obligation of $512.67. Defendant ({{dType.label}}) is responsible for 33% of the
       total obligation ($156.33 share of basic obligation plus $100 for
       expenses) and has a total child-support obligation of $256.33. Plaintiff,
       as the payor, shall receive a $100 credit for the additional child-rearing
@@ -114,7 +129,15 @@ const supports = supportData;
 export default {
   setup() {
     return {
-      partiesChildren: ref(1),
+      partiesChildren: ref({ label: "Select One", value: 0 }),
+      childrenoptions: [
+        { label: "One", value: 0 },
+        { label: "Two", value: 1 },
+        { label: "Three", value: 2 },
+        { label: "Four", value: 3 },
+        { label: "Five", value: 4 },
+        { label: "Six", value: 5 }
+      ],
       pIncome: ref(null),
       dIncome: ref(null),
       pPayPeriod: ref({ label: "Select One", value: 0 }),
@@ -123,10 +146,16 @@ export default {
         { label: "Weekly", value: 4.334 },
         { label: "Biweekly", value: 2.167 },
         { label: "Semimonthly", value: 2 },
-        { label: "Monthly", value: 1 },
+        { label: "Monthly", value: 1 }
       ],
       pDeductions: ref(null),
       dDeductions: ref(null),
+      pType: ref({ label: "payee", value: 1 }),
+      dType: ref({ label: "payor", value: 0 }),
+      typeoptions: [
+        { label: "payor", value: 0 },
+        { label: "payee", value: 1 }
+      ]
     };
   },
   computed: {
@@ -136,18 +165,18 @@ export default {
         defendant: (this.dIncome - this.dDeductions) * this.dPayPeriod.value,
         combined:
           (this.pIncome - this.pDeductions) * this.pPayPeriod.value +
-          (this.dIncome - this.dDeductions) * this.dPayPeriod.value,
+          (this.dIncome - this.dDeductions) * this.dPayPeriod.value
       };
     },
     GrossPercentage() {
       return {
         plaintiff: this.GrossIncome.plaintiff / this.GrossIncome.combined,
-        defendant: this.GrossIncome.defendant / this.GrossIncome.combined,
+        defendant: this.GrossIncome.defendant / this.GrossIncome.combined
       };
     },
     RoundIncome() {
       return {
-        total: Math.floor(this.GrossIncome.combined / 50) * 50,
+        total: Math.floor(this.GrossIncome.combined / 50) * 50
       };
     },
     PresumedSupport() {
@@ -159,12 +188,12 @@ export default {
               return item;
             }
           })
-          .combinedSupport.at(this.partiesChildren - 1);
+          .combinedSupport.at(this.partiesChildren.value);
       }
 
       return 125;
-    },
+    }
   },
-  name: "PageCalculator",
+  name: "PageCalculator"
 };
 </script>
