@@ -43,7 +43,25 @@
             class="col-4 q-gutter-sm q-col-gutter-sm"
             v-model="pType"
             :options="typeoptions"
-            label="Payor/Payee"
+            label="Plaintiff is:"
+          />
+          <q-input
+            outlined
+            class="col-4 q-gutter-sm q-col-gutter-sm"
+            v-model="pHealthInsurance"
+            label="Health insurance"
+          />
+          <q-input
+            outlined
+            class="col-4 q-gutter-sm q-col-gutter-sm"
+            v-model="pMedicalExpenses"
+            label="Medical expenses"
+          />
+          <q-input
+            outlined
+            class="col-4 q-gutter-sm q-col-gutter-sm"
+            v-model="pWorkExpenses"
+            label="Work expenses"
           />
           <div class="col-4" />
         </div>
@@ -73,12 +91,24 @@
             v-model="dDeductions"
             label="Allowed Deductions (per pay period)"
           />
-          <q-select
-            filled
+          <div class="col-4 q-gutter-sm q-col-gutter-sm" />
+          <q-input
+            outlined
             class="col-4 q-gutter-sm q-col-gutter-sm"
-            v-model="dType"
-            :options="typeoptions"
-            label="Payor/Payee"
+            v-model="dHealthInsurance"
+            label="Health insurance"
+          />
+          <q-input
+            outlined
+            class="col-4 q-gutter-sm q-col-gutter-sm"
+            v-model="dMedicalExpenses"
+            label=" Medical expenses"
+          />
+          <q-input
+            outlined
+            class="col-4 q-gutter-sm q-col-gutter-sm"
+            v-model="dWorkExpenses"
+            label="Work expenses"
           />
           <div class="col-4" />
         </div>
@@ -96,25 +126,26 @@
       Combined Monthly Gross Income: {{ GrossIncome.combined }}. Rounded for
       support purposes is {{ RoundIncome.total }}
     </p>
+    <p class="row">Sentence: {{ Expenses }}</p>
     <p class="row">total support is {{ PresumedSupport }}</p>
     <p class="q-pa-md shadow-2" style="max-width: 624px">
-      The court has determined that Plaintiff ({{pType.label}}) earns a gross income of
-      {{ GrossIncome.plaintiff }} per month and Defendant ({{dType.label}}) earns a gross
+      The court has determined that {{PayorPayee.payor}} (payor) earns a gross income of
+      {{ GrossIncome.plaintiff }} per month and {{PayorPayee.payee}} (payee) earns a gross
       income of {{ GrossIncome.defendant }} per month. Therefore, the parents’
       combined gross income is {{ GrossIncome.combined }} with a basic
       child-support obligation of {{ PresumedSupport }} for their one child per
-      the Chart. The court also finds that Plaintiff ({{pType.label}}) is paying for the
+      the Chart. The court also finds that {{PayorPayee.payor}} (payor) is paying for the
       child’s health insurance premium in the amount of $100 per month and that
-      Defendant ({{dType.label}}) is paying $200 for childcare expenses, for a total of
-      $300 for additional child-rearing expenses. Plaintiff ({{pType.label}}) is
+      {{PayorPayee.payee}} (payee) is paying $200 for childcare expenses, for a total of
+      $300 for additional child-rearing expenses. {{PayorPayee.payor}} (payor) is
       responsible for 66% of the total obligation ($312.67 share of basic
       obligation plus $200 for expenses) and has a total child-support
-      obligation of $512.67. Defendant ({{dType.label}}) is responsible for 33% of the
+      obligation of $512.67. {{PayorPayee.payee}} (payee) is responsible for 33% of the
       total obligation ($156.33 share of basic obligation plus $100 for
-      expenses) and has a total child-support obligation of $256.33. Plaintiff,
+      expenses) and has a total child-support obligation of $256.33. {{PayorPayee.payor}},
       as the payor, shall receive a $100 credit for the additional child-rearing
-      expenses that he is paying out of pocket. Plaintiff shall pay $412 per
-      month to Defendant beginning on March 1, 2020, and he shall continue to
+      expenses that (s)he is paying out of pocket. {{PayorPayee.payor}} shall pay $412 per
+      month to {{PayorPayee.payee}} beginning on March 1, 2020, and (s)he shall continue to
       cover the child’s health insurance premium.
     </p>
   </q-page>
@@ -151,11 +182,16 @@ export default {
       pDeductions: ref(null),
       dDeductions: ref(null),
       pType: ref({ label: "payee", value: 1 }),
-      dType: ref({ label: "payor", value: 0 }),
       typeoptions: [
         { label: "payor", value: 0 },
         { label: "payee", value: 1 }
-      ]
+      ],
+      pHealthInsurance: ref(0),
+      dHealthInsurance: ref(0),
+      pMedicalExpenses: ref(0),
+      dMedicalExpenses: ref(0),
+      pWorkExpenses: ref(0),
+      dWorkExpenses: ref(0)
     };
   },
   computed: {
@@ -192,6 +228,90 @@ export default {
       }
 
       return 125;
+    },
+    Expenses() {
+      let dtotalexpenses =
+        this.dHealthInsurance + this.dMedicalExpenses + this.dWorkExpenses;
+      let ptotalexpenses =
+        this.pHealthInsurance + this.pMedicalExpenses + this.pWorkExpenses;
+      let totalexpenses = dtotalexpenses + ptotalexpenses;
+      let dhi;
+      let dme;
+      let dwe;
+      let phi;
+      let pme;
+      let pwe;
+      let psentence;
+      let dsentence;
+      if (dtotalexpenses > 0) {
+        if (this.dHealthInsurance > 0) {
+          dhi = "$" + this.dHealthInsurance + " in health insurance";
+        } else {
+          dhi = "";
+        }
+        if (this.dMedicalExpenses > 0) {
+          dme =
+            "$" + this.dMedicalExpenses + " in extraordinary medical expenses";
+        } else {
+          dme = "";
+        }
+        if (this.dWorkExpenses > 0) {
+          dwe = "$" + this.dWorkExpenses + " in work expenses";
+        } else {
+          dwe = "";
+        }
+        dsentence = `Defendant pays ${dhi}, ${dme}, and ${dwe} for the minor child.`;
+      } else {
+        dsentence = "";
+      }
+      if (ptotalexpenses > 0) {
+        if (this.pHealthInsurance > 0) {
+          phi = "$" + this.pHealthInsurance + " in health insurance";
+        } else {
+          phi = "";
+        }
+        if (this.pMedicalExpenses > 0) {
+          pme =
+            "$" + this.pMedicalExpenses + " in extraordinary medical expenses";
+        } else {
+          pme = "";
+        }
+        if (this.pWorkExpenses > 0) {
+          pwe = "$" + this.pWorkExpenses + " in work expenses";
+        } else {
+          pwe = "";
+        }
+        psentence =
+          "Plaintiff pays " +
+          phi +
+          ", " +
+          pme +
+          ", and " +
+          pwe +
+          " for the minor child.";
+      } else {
+        psentence = "";
+      }
+      if (totalexpenses > 0) {
+        return `${psentence} ${dsentence} for a total of \$${totalexpenses} for additional child-rearing expenses`;
+      }
+      return "";
+    },
+    PayorPayee() {
+      if (this.pType.value === 0) {
+        return {
+          payor: "Plaintiff",
+          payee: "Defendant",
+          defendant: "payor",
+          plaintiff: "payee"
+        };
+      }
+      return {
+        payor: "Defendant",
+        payee: "Plaintiff",
+        defendant: "payee",
+        plaintiff: "payor"
+      };
     }
   },
   name: "PageCalculator"
