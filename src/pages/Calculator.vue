@@ -134,12 +134,12 @@
       income of {{ GrossIncome.defendant }} per month. Therefore, the parents’
       combined gross income is {{ GrossIncome.combined }} with a basic
       child-support obligation of {{ PresumedSupport }} for their one child per
-      the Chart. The court also finds that {{ Expenses.sentence }}. {{PayorPayee.payor}} (payor) is
-      responsible for 66% of the total obligation ($312.67 share of basic
-      obligation plus $200 for expenses) and has a total child-support
-      obligation of $512.67. {{PayorPayee.payee}} (payee) is responsible for 33% of the
-      total obligation ($156.33 share of basic obligation plus $100 for
-      expenses) and has a total child-support obligation of $256.33. {{PayorPayee.payor}},
+      the Chart. The court also finds that {{ Expenses.sentence }}. Plaintiff ({{ PayorPayee.plaintiff}}) is
+      responsible for {{ GrossPercentage.plaintiff}} of the total obligation ({{ GrandTotals.psharebasic }} share of basic
+      obligation plus {{ GrandTotals.pshareexpenses }} for expenses) and has a total child-support
+      obligation of {{ GrandTotals.psharetotal}}. Defendant ({{PayorPayee.defendant}}) is responsible for {{GrossPercentage.defendant}} of the
+      total obligation ({{GrandTotals.dsharebasic}} share of basic obligation plus {{GrandTotals.dshareexpenses}} for
+      expenses) and has a total child-support obligation of {{GrandTotals.dsharetotal}}. {{PayorPayee.payor}},
       as the payor, shall receive a $100 credit for the additional child-rearing
       expenses that (s)he is paying out of pocket. {{PayorPayee.payor}} shall pay $412 per
       month to {{PayorPayee.payee}} beginning on March 1, 2020, and (s)he shall continue to
