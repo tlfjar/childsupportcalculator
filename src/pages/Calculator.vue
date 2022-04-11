@@ -5,18 +5,18 @@
         class="fit row justify-start items-start content-start q-py-sm q-mx-sm q-mb-md shadow-1"
         style="min-width: 624px; max-width: 624px"
       >
-        <q-date class="col q-ml-sm" v-model="supportDate" minimal />
-        <div class="col-4 q-mx-sm">
-          <q-select
-            filled
-            class="col-12 q-mb-sm"
-            v-model="partiesChildren"
-            :options="childrenoptions"
-            label="Number of Children"
-          />
+        <q-date
+          class="col q-ml-sm"
+          style="max-height: 248px"
+          v-model="supportDate"
+          landscape
+          title="Support Start Date"
+          subtitle="select one"
+        />
+        <div class="col-4 q-mx-sm" style="min-height: 280px">
           <q-input
             outlined
-            class="col-12 q-my-sm"
+            class="col-12 q-mb-sm"
             v-model="plaintiffName"
             label="Plaintiff's Name"
           />
@@ -26,9 +26,23 @@
             v-model="defendantName"
             label="Defendant's Name"
           />
+          <q-select
+            filled
+            class="col-12 q-my-sm"
+            v-model="pType"
+            :options="typeoptions"
+            label="Plaintiff is:"
+          />
+          <q-select
+            filled
+            class="col-12 q-my-sm"
+            v-model="partiesChildren"
+            :options="childrenoptions"
+            label="Number of Children"
+          />
         </div>
       </div>
-      <div class="col-lt-lg-6 col-lt-lg-12 q-mb-md q-mx-sm">
+      <div class="col-lt-lg-6 col-lt-lg-12 q-mb-md q-mx-sm" style="min-height: 280px">
         <div
           class="fit row justify-start items-start content-start q-py-sm q-mb-md shadow-1"
           style="min-width: 624px; max-width: 624px"
@@ -53,13 +67,15 @@
             v-model="pDeductions"
             label="Allowed Deductions (per pay period)"
           />
-          <q-select
-            filled
-            class="col-4 q-gutter-sm q-col-gutter-sm"
-            v-model="pType"
-            :options="typeoptions"
-            label="Plaintiff is:"
-          />
+          <div class="col-4 q-gutter-sm q-col-gutter-sm" />
+          <h6
+            v-if="partiesChildren.value === 0"
+            class="col-12 q-mt-sm q-mb-none q-mx-sm"
+          >Additional Expenses Paid for Minor child:</h6>
+          <h6
+            v-else
+            class="col-12 q-mt-sm q-mb-none q-mx-sm"
+          >Additional Expenses Paid for Minor children:</h6>
           <q-input
             outlined
             class="col-4 q-gutter-sm q-col-gutter-sm"
@@ -81,7 +97,7 @@
           <div class="col-4" />
         </div>
       </div>
-      <div class="col-gt-lg-6 col-lt-lg-12 q-mb-md q-mx-sm">
+      <div class="col-gt-lg-6 col-lt-lg-12 q-mb-md q-mx-sm" style="min-height: 280px">
         <div
           class="fit row justify-start items-start content-start q-py-sm q-mb-md shadow-1"
           style="min-width: 624px; max-width: 624px"
@@ -107,6 +123,14 @@
             label="Allowed Deductions (per pay period)"
           />
           <div class="col-4 q-gutter-sm q-col-gutter-sm" />
+          <h6
+            v-if="partiesChildren.value === 0"
+            class="col-12 q-mt-sm q-mb-none q-mx-sm"
+          >Additional Expenses Paid for Minor child:</h6>
+          <h6
+            v-else
+            class="col-12 q-mt-sm q-mb-none q-mx-sm"
+          >Additional Expenses Paid for Minor children:</h6>
           <q-input
             outlined
             class="col-4 q-gutter-sm q-col-gutter-sm"
@@ -128,38 +152,31 @@
           <div class="col-4" />
         </div>
       </div>
+      <div
+        class="fit row justify-start items-start content-start q-py-sm q-mx-sm q-mb-md shadow-1"
+        style="min-width: 624px; max-width: 624px"
+      >
+        <div class="col-gt-lg-6 col-lt-lg-12 q-mb-md q-mx-sm" style="min-height: 280px">
+          <h5 class="col-12 q-my-none q-mx-sm">Support Paragraph:</h5>
+          <p class="col-12 q-ma-sm q-my-none" style="min-height: 280px">
+            The court has determined that {{PayorPayee.payor}} (payor) earns a gross income of
+            ${{ (+GrossIncome.plaintiff).toFixed(2) }} per month and {{PayorPayee.payee}} (payee) earns a gross
+            income of ${{ (+GrossIncome.defendant).toFixed(2) }} per month. Therefore, the parents’
+            combined gross income is ${{ (+GrossIncome.combined).toFixed(2) }} with a basic
+            child-support obligation of ${{ (+PresumedSupport).toFixed(2) }} for their {{partiesChildren.label}} child(ren) per
+            the Chart. The court also finds that {{ Expenses.sentence }}. Plaintiff ({{ PayorPayee.plaintiff}}) is
+            responsible for {{ (GrossPercentage.plaintiff * 100).toFixed(0) }}% of the total obligation (${{ (+GrandTotals.psharebasic).toFixed(2) }} share of basic
+            obligation plus ${{ (+GrandTotals.pshareexpenses).toFixed(2) }} for expenses) and has a total child-support
+            obligation of ${{ (+GrandTotals.psharetotal).toFixed(2)}}. Defendant ({{PayorPayee.defendant}}) is responsible for {{(GrossPercentage.defendant * 100).toFixed(0)}}% of the
+            total obligation (${{(+GrandTotals.dsharebasic).toFixed(2)}} share of basic obligation plus ${{(+GrandTotals.dshareexpenses).toFixed(2)}} for
+            expenses) and has a total child-support obligation of ${{(+GrandTotals.dsharetotal).toFixed(2)}}. {{PayorPayee.payor}},
+            as the payor, shall receive a ${{ (+GrandTotals.payorexpenses).toFixed(2) }} credit for the additional child-rearing
+            expenses that (s)he is paying out of pocket. {{PayorPayee.payor}} shall pay ${{ (+GrandTotals.payorpays).toFixed(2) }} per
+            month to {{PayorPayee.payee}} beginning on {{DateMaker}}.
+          </p>
+        </div>
+      </div>
     </div>
-    <p class="row">
-      Plaintiff's Monthly Gross Income: {{ GrossIncome.plaintiff }}, which is
-      {{ GrossPercentage.plaintiff }}
-    </p>
-    <p class="row">
-      Defendant's Monthly Gross Income: {{ GrossIncome.defendant }}, which is
-      {{ GrossPercentage.defendant }}
-    </p>
-    <p class="row">
-      Combined Monthly Gross Income: {{ GrossIncome.combined }}. Rounded for
-      support purposes is {{ RoundIncome.total }}
-    </p>
-    <p class="row">Sentence: {{ Expenses.sentence }}</p>
-    <p class="row">total support is {{ PresumedSupport }}</p>
-    <p class="q-pa-md shadow-2" style="max-width: 624px">
-      The court has determined that {{PayorPayee.payor}} (payor) earns a gross income of
-      {{ GrossIncome.plaintiff }} per month and {{PayorPayee.payee}} (payee) earns a gross
-      income of {{ GrossIncome.defendant }} per month. Therefore, the parents’
-      combined gross income is {{ GrossIncome.combined }} with a basic
-      child-support obligation of {{ PresumedSupport }} for their one child per
-      the Chart. The court also finds that {{ Expenses.sentence }}. Plaintiff ({{ PayorPayee.plaintiff}}) is
-      responsible for {{ GrossPercentage.plaintiff}} of the total obligation ({{ GrandTotals.psharebasic }} share of basic
-      obligation plus {{ GrandTotals.pshareexpenses }} for expenses) and has a total child-support
-      obligation of {{ GrandTotals.psharetotal}}. Defendant ({{PayorPayee.defendant}}) is responsible for {{GrossPercentage.defendant}} of the
-      total obligation ({{GrandTotals.dsharebasic}} share of basic obligation plus {{GrandTotals.dshareexpenses}} for
-      expenses) and has a total child-support obligation of {{GrandTotals.dsharetotal}}. {{PayorPayee.payor}},
-      as the payor, shall receive a ${{ GrandTotals.payorexpenses }} credit for the additional child-rearing
-      expenses that (s)he is paying out of pocket. {{PayorPayee.payor}} shall pay {{ GrandTotals.payorpays }} per
-      month to {{PayorPayee.payee}} beginning on {{supportDate}}, and (s)he shall continue to
-      cover the child’s health insurance premium.
-    </p>
   </q-page>
 </template>
 
@@ -176,12 +193,12 @@ export default {
       defendantName: ref(null),
       partiesChildren: ref({ label: "Select One", value: 0 }),
       childrenoptions: [
-        { label: "One", value: 0 },
-        { label: "Two", value: 1 },
-        { label: "Three", value: 2 },
-        { label: "Four", value: 3 },
-        { label: "Five", value: 4 },
-        { label: "Six", value: 5 }
+        { label: "one", value: 0 },
+        { label: "two", value: 1 },
+        { label: "three", value: 2 },
+        { label: "four", value: 3 },
+        { label: "five", value: 4 },
+        { label: "six", value: 5 }
       ],
       pIncome: ref(null),
       dIncome: ref(null),
@@ -206,10 +223,18 @@ export default {
       dMedicalExpenses: ref(0),
       pWorkExpenses: ref(0),
       dWorkExpenses: ref(0),
-      supportDate: ref(null)
+      supportDate: ref(new Date())
     };
   },
   computed: {
+    DateMaker() {
+      return new Date(this.supportDate).toLocaleDateString("en-us", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+      });
+    },
     GrossIncome() {
       return {
         plaintiff: (this.pIncome - this.pDeductions) * this.pPayPeriod.value,
@@ -265,68 +290,74 @@ export default {
       let dtype = this.PayorPayee.defendant;
       if (dtotalexpenses > 0) {
         if (this.dHealthInsurance > 0) {
-          dhi = "$" + this.dHealthInsurance + " in health insurance";
+          dhi =
+            "$" + (+this.dHealthInsurance).toFixed(2) + " in health insurance";
           dt = dt + "A";
         } else {
           dhi = "";
         }
         if (this.dMedicalExpenses > 0) {
           dme =
-            "$" + this.dMedicalExpenses + " in extraordinary medical expenses";
+            "$" +
+            (+this.dMedicalExpenses).toFixed(2) +
+            " in extraordinary medical expenses";
           dt = dt + "B";
         } else {
           dme = "";
         }
         if (this.dWorkExpenses > 0) {
-          dwe = "$" + this.dWorkExpenses + " in work expenses";
+          dwe = "$" + (+this.dWorkExpenses).toFixed(2) + " in work expenses";
           dt = dt + "C";
         } else {
           dwe = "";
         }
         if (dt === "ABC") {
-          dsentence = `Defendant (${dtype}) pays ${dhi}, ${dme}, and ${dwe} for the minor child.`;
+          dsentence = `Defendant (${dtype}) pays ${dhi}, ${dme}, and ${dwe} for the minor child`;
         } else if (dt === "AB") {
-          dsentence = `Defendant (${dtype}) pays ${dhi} and ${dme} for the minor child.`;
+          dsentence = `Defendant (${dtype}) pays ${dhi} and ${dme} for the minor child`;
         } else if (dt === "AC") {
-          dsentence = `Defendant (${dtype}) pays ${dhi} and ${dwe} for the minor child.`;
+          dsentence = `Defendant (${dtype}) pays ${dhi} and ${dwe} for the minor child`;
         } else if (dt === "BC") {
-          dsentence = `Defendant (${dtype}) pays ${dme} and ${dwe} for the minor child.`;
+          dsentence = `Defendant (${dtype}) pays ${dme} and ${dwe} for the minor child`;
         } else {
-          dsentence = `Defendant (${dtype}) pays ${dhi}${dme}${dwe} for the minor child.`;
+          dsentence = `Defendant (${dtype}) pays ${dhi}${dme}${dwe} for the minor child`;
         }
       } else {
         dsentence = "";
       }
       if (ptotalexpenses > 0) {
         if (this.pHealthInsurance > 0) {
-          phi = "$" + this.pHealthInsurance + " in health insurance";
+          phi =
+            "$" + (+this.pHealthInsurance).toFixed(2) + " in health insurance";
           pt = pt + "A";
         } else {
           phi = "";
         }
         if (this.pMedicalExpenses > 0) {
           pme =
-            "$" + this.pMedicalExpenses + " in extraordinary medical expenses";
+            "$" +
+            (+this.pMedicalExpenses).toFixed(2) +
+            " in extraordinary medical expenses";
           pt = pt + "B";
         } else {
           pme = "";
         }
         if (this.pWorkExpenses > 0) {
-          pwe = "$" + this.pWorkExpenses + " in work expenses";
+          pwe = "$" + (+this.pWorkExpenses).toFixed(2) + " in work expenses";
           pt = pt + "C";
         } else {
           pwe = "";
         }
         if (pt === "ABC") {
-          psentence = `Plaintiff (${ptype}) pays ${phi}, ${pme}, and ${pwe} for the minor child.`;
+          psentence = `Plaintiff (${ptype}) pays ${phi}, ${pme}, and ${pwe} for the minor child`;
         } else if (pt === "AB") {
-          psentence = `Plaintiff (${ptype}) pays ${phi} and ${pme} for the minor child.`;
+          psentence = `Plaintiff (${ptype}) pays ${phi} and ${pme} for the minor child`;
         } else if (pt === "AC") {
-          psentence = `Plaintiff (${ptype}) pays ${phi} and ${pwe} for the minor child.`;
+          psentence = `Plaintiff (${ptype}) pays ${phi} and ${pwe} for the minor child`;
         } else if (pt === "BC") {
-          psentence = `Plaintiff (${ptype}) pays ${pme} and ${pwe} for the minor child.`;
+          psentence = `Plaintiff (${ptype}) pays ${pme} and ${pwe} for the minor child`;
         } else {
-          psentence = `Plaintiff (${ptype}) pays ${phi}${pme}${pwe} for the minor child.`;
+          psentence = `Plaintiff (${ptype}) pays ${phi}${pme}${pwe} for the minor child`;
         }
       } else {
         psentence = "";
@@ -334,17 +365,26 @@ export default {
       if (totalexpenses > 0) {
         if (ptotalexpenses > 0 && dtotalexpenses > 0) {
           return {
-            sentence: `${psentence} ${dsentence} for a total of \$${totalexpenses} for additional child-rearing expenses`,
+            sentence: `${psentence}; and ${dsentence}; for a total of \$${(+totalexpenses).toFixed(
+              2
+            )} in additional child-rearing expenses`,
             totalexpenses,
             ptotalexpenses,
             dtotalexpenses
           };
         } else if (ptotalexpenses > 0) {
           return {
-            sentence: psentence,
+            sentence: `${psentence}.`,
             totalexpenses,
             ptotalexpenses,
             dtotalexpenses: 0
+          };
+        } else {
+          return {
+            sentence: `${dsentence}.`,
+            totalexpenses,
+            ptotalexpenses: 0,
+            dtotalexpenses
           };
         }
       }
@@ -360,15 +400,15 @@ export default {
         return {
           payor: "Plaintiff",
           payee: "Defendant",
-          defendant: "payor",
-          plaintiff: "payee"
+          defendant: "payee",
+          plaintiff: "payor"
         };
       }
       return {
         payor: "Defendant",
         payee: "Plaintiff",
-        defendant: "payee",
-        plaintiff: "payor"
+        defendant: "payor",
+        plaintiff: "payee"
       };
     },
     GrandTotals() {
