@@ -2,16 +2,31 @@
   <q-page padding>
     <div class="fit row q-py-xs" style="max-width: 1280px">
       <div
-        class="fit row justify-center items-center content-start q-py-sm q-mx-sm q-mb-md shadow-1"
-        style="min-width: 624px; max-width: 1280px"
+        class="fit row justify-start items-start content-start q-py-sm q-mx-sm q-mb-md shadow-1"
+        style="min-width: 624px; max-width: 624px"
       >
-        <q-select
-          filled
-          class="col-4 q-gutter-sm q-col-gutter-sm"
-          v-model="partiesChildren"
-          :options="childrenoptions"
-          label="Number of Children"
-        />
+        <q-date class="col q-ml-sm" v-model="supportDate" minimal />
+        <div class="col-4 q-mx-sm">
+          <q-select
+            filled
+            class="col-12 q-mb-sm"
+            v-model="partiesChildren"
+            :options="childrenoptions"
+            label="Number of Children"
+          />
+          <q-input
+            outlined
+            class="col-12 q-my-sm"
+            v-model="plaintiffName"
+            label="Plaintiff's Name"
+          />
+          <q-input
+            outlined
+            class="col-12 q-my-sm"
+            v-model="defendantName"
+            label="Defendant's Name"
+          />
+        </div>
       </div>
       <div class="col-lt-lg-6 col-lt-lg-12 q-mb-md q-mx-sm">
         <div
@@ -140,9 +155,9 @@
       obligation of {{ GrandTotals.psharetotal}}. Defendant ({{PayorPayee.defendant}}) is responsible for {{GrossPercentage.defendant}} of the
       total obligation ({{GrandTotals.dsharebasic}} share of basic obligation plus {{GrandTotals.dshareexpenses}} for
       expenses) and has a total child-support obligation of {{GrandTotals.dsharetotal}}. {{PayorPayee.payor}},
-      as the payor, shall receive a $100 credit for the additional child-rearing
-      expenses that (s)he is paying out of pocket. {{PayorPayee.payor}} shall pay $412 per
-      month to {{PayorPayee.payee}} beginning on March 1, 2020, and (s)he shall continue to
+      as the payor, shall receive a ${{ GrandTotals.payorexpenses }} credit for the additional child-rearing
+      expenses that (s)he is paying out of pocket. {{PayorPayee.payor}} shall pay {{ GrandTotals.payorpays }} per
+      month to {{PayorPayee.payee}} beginning on {{supportDate}}, and (s)he shall continue to
       cover the child’s health insurance premium.
     </p>
   </q-page>
@@ -157,6 +172,8 @@ const supports = supportData;
 export default {
   setup() {
     return {
+      plaintiffName: ref(null),
+      defendantName: ref(null),
       partiesChildren: ref({ label: "Select One", value: 0 }),
       childrenoptions: [
         { label: "One", value: 0 },
@@ -188,7 +205,8 @@ export default {
       pMedicalExpenses: ref(0),
       dMedicalExpenses: ref(0),
       pWorkExpenses: ref(0),
-      dWorkExpenses: ref(0)
+      dWorkExpenses: ref(0),
+      supportDate: ref(null)
     };
   },
   computed: {
@@ -354,19 +372,39 @@ export default {
       };
     },
     GrandTotals() {
+      let psharetotal =
+        (+this.PresumedSupport + +this.Expenses.totalexpenses) *
+        this.GrossPercentage.plaintiff;
+      let psharebasic = this.PresumedSupport * this.GrossPercentage.plaintiff;
+      let pshareexpenses =
+        this.Expenses.ptotalexpenses * this.GrossPercentage.plaintiff;
+      let dsharetotal =
+        (+this.PresumedSupport + +this.Expenses.totalexpenses) *
+        this.GrossPercentage.defendant;
+      let dsharebasic = this.PresumedSupport * this.GrossPercentage.defendant;
+      let dshareexpenses =
+        this.Expenses.dtotalexpenses * this.GrossPercentage.defendant;
+      if (this.pType.value === 0) {
+        return {
+          psharetotal,
+          psharebasic,
+          pshareexpenses,
+          dsharebasic,
+          dshareexpenses,
+          dsharetotal,
+          payorpays: psharetotal - this.Expenses.ptotalexpenses,
+          payorexpenses: this.Expenses.ptotalexpenses
+        };
+      }
       return {
-        psharetotal:
-          (+this.PresumedSupport + +this.Expenses.totalexpenses) *
-          this.GrossPercentage.plaintiff,
-        psharebasic: this.PresumedSupport * this.GrossPercentage.plaintiff,
-        pshareexpenses:
-          this.Expenses.ptotalexpenses * this.GrossPercentage.plaintiff,
-        dsharetotal:
-          (+this.PresumedSupport + +this.Expenses.totalexpenses) *
-          this.GrossPercentage.defendant,
-        dsharebasic: this.PresumedSupport * this.GrossPercentage.defendant,
-        dshareexpenses:
-          this.Expenses.dtotalexpenses * this.GrossPercentage.defendant
+        psharetotal,
+        psharebasic,
+        pshareexpenses,
+        dsharebasic,
+        dshareexpenses,
+        dsharetotal,
+        payorpays: dsharetotal - this.Expenses.dtotalexpenses,
+        payorexpenses: this.Expenses.dtotalexpenses
       };
     }
   },
