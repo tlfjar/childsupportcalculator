@@ -176,17 +176,22 @@
           </p>
         </div>
       </div>
+      <Worksheet />
     </div>
   </q-page>
 </template>
 
 <script>
 import { ref } from "vue";
+import Worksheet from "components/Worksheet.vue";
 import supportData from "../assets/support.json";
 
 const supports = supportData;
 
 export default {
+  components: {
+    Worksheet
+  },
   setup() {
     return {
       plaintiffName: ref(null),
