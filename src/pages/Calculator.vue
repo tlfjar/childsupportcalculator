@@ -6,13 +6,14 @@
         style="min-width: 624px; max-width: 624px"
       >
         <q-date
-          class="col q-ml-sm"
+          class="col q-mx-sm"
           style="max-height: 248px"
           v-model="supportDate"
           landscape
           title="Support Start Date"
           subtitle="select one"
         />
+        <q-separator vertical />
         <div class="col-4 q-mx-sm" style="min-height: 280px">
           <q-input
             outlined
@@ -157,8 +158,9 @@
         style="min-width: 624px; max-width: 624px"
       >
         <div class="col-gt-lg-6 col-lt-lg-12 q-mb-md q-mx-sm" style="min-height: 280px">
-          <h5 class="col-12 q-my-none q-mx-sm">Support Paragraph:</h5>
-          <p class="col-12 q-ma-sm q-my-none" style="min-height: 280px">
+          <div class="row q-mx-sm text-h5">Support Paragraph:</div>
+          <q-separator />
+          <div class="row q-mx-sm q-my-xs text-justify">
             The court has determined that {{PayorPayee.payor}} (payor) earns a gross income of
             ${{ (+GrossIncome.plaintiff).toFixed(2) }} per month and {{PayorPayee.payee}} (payee) earns a gross
             income of ${{ (+GrossIncome.defendant).toFixed(2) }} per month. Therefore, the parents’
@@ -173,10 +175,13 @@
             as the payor, shall receive a ${{ (+GrandTotals.payorexpenses).toFixed(2) }} credit for the additional child-rearing
             expenses that (s)he is paying out of pocket. {{PayorPayee.payor}} shall pay ${{ (+GrandTotals.payorpays).toFixed(2) }} per
             month to {{PayorPayee.payee}} beginning on {{DateMaker}}.
-          </p>
+          </div>
+          <q-separator />
+          <div class="row q-mx-sm q-mt-xs q-mb-none justify-center">
+            <Worksheet :payor="PayorPayee.payor" :payee="PayorPayee.payee" />
+          </div>
         </div>
       </div>
-      <Worksheet />
     </div>
   </q-page>
 </template>
