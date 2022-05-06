@@ -157,7 +157,7 @@
         class="fit row justify-start items-start content-start q-py-sm q-mx-sm q-mb-md shadow-1"
         style="min-width: 624px; max-width: 624px"
       >
-        <div class="col-gt-lg-6 col-lt-lg-12 q-mb-md q-mx-sm" style="min-height: 280px">
+        <div class="col-gt-lg-6 col-lt-lg-12 q-mb-none q-mx-sm" style="min-height: 280px">
           <div class="row q-mx-sm text-h5">Support Paragraph:</div>
           <q-separator />
           <div class="row q-mx-sm q-my-xs text-justify">
@@ -177,8 +177,44 @@
             month to {{PayorPayee.payee}} beginning on {{DateMaker}}.
           </div>
           <q-separator />
-          <div class="row q-mx-sm q-mt-xs q-mb-none justify-center">
-            <Worksheet :payor="PayorPayee.payor" :payee="PayorPayee.payee" />
+          <div class="row q-mx-sm q-mt-sm q-my-none justify-center items-center">
+            <DocxWorksheet
+              :plaintiff="{
+              name: plaintiffName, 
+              payorpayee: PayorPayee.plaintiff, 
+              gross: pIncome, 
+              deductions: pDeductions,
+              adjgross: GrossIncome.plaintiff,
+              supportshare: GrossPercentage.plaintiff,
+              basicshare: GrandTotals.psharebasic,
+              healthins: pHealthInsurance,
+              extramedexp: pMedicalExpenses,
+              workexpense: pWorkExpenses,
+              totaladdexp: Expenses.ptotalexpenses,
+              addexpshare: GrandTotals.pshareexpenses,
+              partyobligation: GrandTotals.psharetotal,
+              presumedsupport: +GrandTotals.psharetotal - +Expenses.ptotalexpenses
+            }"
+              :defendant="{
+              name: defendantName,
+              payorpayee: PayorPayee.defendant, 
+              gross: dIncome, 
+              deductions: dDeductions,
+              adjgross: GrossIncome.defendant,
+              supportshare: GrossPercentage.defendant,
+              basicshare: GrandTotals.dsharebasic,
+              healthins: dHealthInsurance,
+              extramedexp: dMedicalExpenses,
+              workexpense: dWorkExpenses,
+              totaladdexp: Expenses.dtotalexpenses,
+              addexpshare: GrandTotals.dshareexpenses,
+              partyobligation: GrandTotals.dsharetotal,
+              presumedsupport: +GrandTotals.dsharetotal - +Expenses.dtotalexpenses
+            }"
+              :payor="PayorPayee.payor"
+              :payee="PayorPayee.payee"
+              :combinedsupport="PresumedSupport"
+            />
           </div>
         </div>
       </div>
@@ -188,15 +224,12 @@
 
 <script>
 import { ref } from "vue";
-import Worksheet from "components/Worksheet.vue";
 import supportData from "../assets/support.json";
+import DocxWorksheet from "src/components/docxWorksheet.vue";
 
 const supports = supportData;
 
 export default {
-  components: {
-    Worksheet
-  },
   setup() {
     return {
       plaintiffName: ref(null),
@@ -210,8 +243,8 @@ export default {
         { label: "five", value: 4 },
         { label: "six", value: 5 }
       ],
-      pIncome: ref(null),
-      dIncome: ref(null),
+      pIncome: ref(0),
+      dIncome: ref(0),
       pPayPeriod: ref({ label: "Select One", value: 0 }),
       dPayPeriod: ref({ label: "Select One", value: 0 }),
       options: [
@@ -220,8 +253,8 @@ export default {
         { label: "Semimonthly", value: 2 },
         { label: "Monthly", value: 1 }
       ],
-      pDeductions: ref(null),
-      dDeductions: ref(null),
+      pDeductions: ref(0),
+      dDeductions: ref(0),
       pType: ref({ label: "payee", value: 1 }),
       typeoptions: [
         { label: "payor", value: 0 },
@@ -276,13 +309,11 @@ export default {
           })
           .combinedSupport.at(this.partiesChildren.value);
       }
-
       return 125;
     },
     Expenses() {
       let dtotalexpenses =
         +this.dHealthInsurance + +this.dMedicalExpenses + +this.dWorkExpenses;
-
       let ptotalexpenses =
         +this.pHealthInsurance + +this.pMedicalExpenses + +this.pWorkExpenses;
       let totalexpenses = +dtotalexpenses + +ptotalexpenses;
@@ -427,13 +458,13 @@ export default {
         this.GrossPercentage.plaintiff;
       let psharebasic = this.PresumedSupport * this.GrossPercentage.plaintiff;
       let pshareexpenses =
-        this.Expenses.ptotalexpenses * this.GrossPercentage.plaintiff;
+        this.Expenses.totalexpenses * this.GrossPercentage.plaintiff;
       let dsharetotal =
         (+this.PresumedSupport + +this.Expenses.totalexpenses) *
         this.GrossPercentage.defendant;
       let dsharebasic = this.PresumedSupport * this.GrossPercentage.defendant;
       let dshareexpenses =
-        this.Expenses.dtotalexpenses * this.GrossPercentage.defendant;
+        this.Expenses.totalexpenses * this.GrossPercentage.defendant;
       if (this.pType.value === 0) {
         return {
           psharetotal,
@@ -458,6 +489,7 @@ export default {
       };
     }
   },
-  name: "PageCalculator"
+  name: "PageCalculator",
+  components: { DocxWorksheet }
 };
 </script>
