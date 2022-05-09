@@ -1,188 +1,99 @@
 <template>
   <q-page padding>
     <div class="fit row q-py-xs" style="max-width: 1280px">
-      <div
-        class="fit row justify-start items-start content-start q-py-sm q-mx-sm q-mb-md shadow-1"
-        style="min-width: 624px; max-width: 624px"
-      >
-        <q-date
-          class="col q-mx-sm"
-          style="max-height: 248px"
-          v-model="supportDate"
-          landscape
-          title="Support Start Date"
-          subtitle="select one"
-        />
+      <div class="fit row justify-start items-start content-start q-py-sm q-mx-sm q-mb-md shadow-1"
+        style="min-width: 624px; max-width: 624px">
+        <q-date class="col q-mx-sm" style="max-height: 248px" v-model="supportDate" landscape title="Support Start Date"
+          subtitle="select one" />
         <q-separator vertical />
         <div class="col-4 q-mx-sm" style="min-height: 280px">
-          <q-input
-            outlined
-            class="col-12 q-mb-sm"
-            v-model="plaintiffName"
-            label="Plaintiff's Name"
-          />
-          <q-input
-            outlined
-            class="col-12 q-my-sm"
-            v-model="defendantName"
-            label="Defendant's Name"
-          />
-          <q-select
-            filled
-            class="col-12 q-my-sm"
-            v-model="pType"
-            :options="typeoptions"
-            label="Plaintiff is:"
-          />
-          <q-select
-            filled
-            class="col-12 q-my-sm"
-            v-model="partiesChildren"
-            :options="childrenoptions"
-            label="Number of Children"
-          />
+          <q-input outlined class="col-12 q-mb-sm" v-model="plaintiffName" label="Plaintiff's Name" />
+          <q-input outlined class="col-12 q-my-sm" v-model="defendantName" label="Defendant's Name" />
+          <q-select filled class="col-12 q-my-sm" v-model="pType" :options="typeoptions" label="Plaintiff is:" />
+          <q-select filled class="col-12 q-my-sm" v-model="partiesChildren" :options="childrenoptions"
+            label="Number of Children" />
         </div>
       </div>
       <div class="col-lt-lg-6 col-lt-lg-12 q-mb-md q-mx-sm" style="min-height: 280px">
-        <div
-          class="fit row justify-start items-start content-start q-py-sm q-mb-md shadow-1"
-          style="min-width: 624px; max-width: 624px"
-        >
+        <div class="fit row justify-start items-start content-start q-py-sm q-mb-md shadow-1"
+          style="min-width: 624px; max-width: 624px">
           <h5 class="col-12 q-my-none q-mx-sm">Plaintiff</h5>
-          <q-input
-            outlined
-            class="col-8 q-gutter-sm q-col-gutter-sm"
-            v-model="pIncome"
-            label="Plaintiff Income (Gross)"
-          />
-          <q-select
-            filled
-            class="col-4 q-gutter-sm q-col-gutter-sm"
-            v-model="pPayPeriod"
-            :options="options"
-            label="Pay Period"
-          />
-          <q-input
-            outlined
-            class="col-8 q-gutter-sm q-col-gutter-sm"
-            v-model="pDeductions"
-            label="Allowed Deductions (per pay period)"
-          />
+          <q-input outlined class="col-8 q-gutter-sm q-col-gutter-sm" v-model="pIncome"
+            label="Plaintiff Income (Gross)" />
+          <q-select filled class="col-4 q-gutter-sm q-col-gutter-sm" v-model="pPayPeriod" :options="options"
+            label="Pay Period" />
+          <q-input outlined class="col-8 q-gutter-sm q-col-gutter-sm" v-model="pDeductions"
+            label="Allowed Deductions (per pay period)" />
           <div class="col-4 q-gutter-sm q-col-gutter-sm" />
-          <h6
-            v-if="partiesChildren.value === 0"
-            class="col-12 q-mt-sm q-mb-none q-mx-sm"
-          >Additional Expenses Paid for Minor child:</h6>
-          <h6
-            v-else
-            class="col-12 q-mt-sm q-mb-none q-mx-sm"
-          >Additional Expenses Paid for Minor children:</h6>
-          <q-input
-            outlined
-            class="col-4 q-gutter-sm q-col-gutter-sm"
-            v-model="pHealthInsurance"
-            label="Health insurance"
-          />
-          <q-input
-            outlined
-            class="col-4 q-gutter-sm q-col-gutter-sm"
-            v-model="pMedicalExpenses"
-            label="Medical expenses"
-          />
-          <q-input
-            outlined
-            class="col-4 q-gutter-sm q-col-gutter-sm"
-            v-model="pWorkExpenses"
-            label="Work expenses"
-          />
+          <h6 v-if="partiesChildren.value === 0" class="col-12 q-mt-sm q-mb-none q-mx-sm">Additional Expenses Paid for
+            Minor child:</h6>
+          <h6 v-else class="col-12 q-mt-sm q-mb-none q-mx-sm">Additional Expenses Paid for Minor children:</h6>
+          <q-input outlined class="col-4 q-gutter-sm q-col-gutter-sm" v-model="pHealthInsurance"
+            label="Health insurance" />
+          <q-input outlined class="col-4 q-gutter-sm q-col-gutter-sm" v-model="pMedicalExpenses"
+            label="Medical expenses" />
+          <q-input outlined class="col-4 q-gutter-sm q-col-gutter-sm" v-model="pWorkExpenses" label="Work expenses" />
           <div class="col-4" />
         </div>
       </div>
       <div class="col-gt-lg-6 col-lt-lg-12 q-mb-md q-mx-sm" style="min-height: 280px">
-        <div
-          class="fit row justify-start items-start content-start q-py-sm q-mb-md shadow-1"
-          style="min-width: 624px; max-width: 624px"
-        >
+        <div class="fit row justify-start items-start content-start q-py-sm q-mb-md shadow-1"
+          style="min-width: 624px; max-width: 624px">
           <h5 class="col-12 q-my-none q-mx-sm">Defendant</h5>
-          <q-input
-            outlined
-            class="col-8 q-gutter-sm q-col-gutter-sm"
-            v-model="dIncome"
-            label="Defendant Income (Gross)"
-          />
-          <q-select
-            filled
-            class="col-4 q-gutter-sm q-col-gutter-sm"
-            v-model="dPayPeriod"
-            :options="options"
-            label="Pay Period"
-          />
-          <q-input
-            outlined
-            class="col-8 q-gutter-sm q-col-gutter-sm"
-            v-model="dDeductions"
-            label="Allowed Deductions (per pay period)"
-          />
+          <q-input outlined class="col-8 q-gutter-sm q-col-gutter-sm" v-model="dIncome"
+            label="Defendant Income (Gross)" />
+          <q-select filled class="col-4 q-gutter-sm q-col-gutter-sm" v-model="dPayPeriod" :options="options"
+            label="Pay Period" />
+          <q-input outlined class="col-8 q-gutter-sm q-col-gutter-sm" v-model="dDeductions"
+            label="Allowed Deductions (per pay period)" />
           <div class="col-4 q-gutter-sm q-col-gutter-sm" />
-          <h6
-            v-if="partiesChildren.value === 0"
-            class="col-12 q-mt-sm q-mb-none q-mx-sm"
-          >Additional Expenses Paid for Minor child:</h6>
-          <h6
-            v-else
-            class="col-12 q-mt-sm q-mb-none q-mx-sm"
-          >Additional Expenses Paid for Minor children:</h6>
-          <q-input
-            outlined
-            class="col-4 q-gutter-sm q-col-gutter-sm"
-            v-model="dHealthInsurance"
-            label="Health insurance"
-          />
-          <q-input
-            outlined
-            class="col-4 q-gutter-sm q-col-gutter-sm"
-            v-model="dMedicalExpenses"
-            label=" Medical expenses"
-          />
-          <q-input
-            outlined
-            class="col-4 q-gutter-sm q-col-gutter-sm"
-            v-model="dWorkExpenses"
-            label="Work expenses"
-          />
+          <h6 v-if="partiesChildren.value === 0" class="col-12 q-mt-sm q-mb-none q-mx-sm">Additional Expenses Paid for
+            Minor child:</h6>
+          <h6 v-else class="col-12 q-mt-sm q-mb-none q-mx-sm">Additional Expenses Paid for Minor children:</h6>
+          <q-input outlined class="col-4 q-gutter-sm q-col-gutter-sm" v-model="dHealthInsurance"
+            label="Health insurance" />
+          <q-input outlined class="col-4 q-gutter-sm q-col-gutter-sm" v-model="dMedicalExpenses"
+            label=" Medical expenses" />
+          <q-input outlined class="col-4 q-gutter-sm q-col-gutter-sm" v-model="dWorkExpenses" label="Work expenses" />
           <div class="col-4" />
         </div>
       </div>
-      <div
-        class="fit row justify-start items-start content-start q-py-sm q-mx-sm q-mb-md shadow-1"
-        style="min-width: 624px; max-width: 624px"
-      >
+      <div class="fit row justify-start items-start content-start q-py-sm q-mx-sm q-mb-md shadow-1"
+        style="min-width: 624px; max-width: 624px">
         <div class="col-gt-lg-6 col-lt-lg-12 q-mb-none q-mx-sm" style="min-height: 280px">
           <div class="row q-mx-sm text-h5">Support Paragraph:</div>
           <q-separator />
           <div class="row q-mx-sm q-my-xs text-justify">
-            The court has determined that {{PayorPayee.payor}} (payor) earns a gross income of
-            ${{ (+GrossIncome.plaintiff).toFixed(2) }} per month and {{PayorPayee.payee}} (payee) earns a gross
+            The court has determined that {{ PayorPayee.payor }} (payor) earns a gross income of
+            ${{ (+GrossIncome.plaintiff).toFixed(2) }} per month and {{ PayorPayee.payee }} (payee) earns a gross
             income of ${{ (+GrossIncome.defendant).toFixed(2) }} per month. Therefore, the parents’
             combined gross income is ${{ (+GrossIncome.combined).toFixed(2) }} with a basic
-            child-support obligation of ${{ (+PresumedSupport).toFixed(2) }} for their {{partiesChildren.label}} child(ren) per
-            the Chart. The court also finds that {{ Expenses.sentence }}. Plaintiff ({{ PayorPayee.plaintiff}}) is
-            responsible for {{ (GrossPercentage.plaintiff * 100).toFixed(0) }}% of the total obligation (${{ (+GrandTotals.psharebasic).toFixed(2) }} share of basic
+            child-support obligation of ${{ (+PresumedSupport).toFixed(2) }} for their {{ partiesChildren.label }}
+            child(ren) per
+            the Chart. The court also finds that {{ Expenses.sentence }}. Plaintiff ({{ PayorPayee.plaintiff }}) is
+            responsible for {{ (GrossPercentage.plaintiff * 100).toFixed(0) }}% of the total obligation (${{
+                (+GrandTotals.psharebasic).toFixed(2)
+            }} share of basic
             obligation plus ${{ (+GrandTotals.pshareexpenses).toFixed(2) }} for expenses) and has a total child-support
-            obligation of ${{ (+GrandTotals.psharetotal).toFixed(2)}}. Defendant ({{PayorPayee.defendant}}) is responsible for {{(GrossPercentage.defendant * 100).toFixed(0)}}% of the
-            total obligation (${{(+GrandTotals.dsharebasic).toFixed(2)}} share of basic obligation plus ${{(+GrandTotals.dshareexpenses).toFixed(2)}} for
-            expenses) and has a total child-support obligation of ${{(+GrandTotals.dsharetotal).toFixed(2)}}. {{PayorPayee.payor}},
-            as the payor, shall receive a ${{ (+GrandTotals.payorexpenses).toFixed(2) }} credit for the additional child-rearing
-            expenses that (s)he is paying out of pocket. {{PayorPayee.payor}} shall pay ${{ (+GrandTotals.payorpays).toFixed(2) }} per
-            month to {{PayorPayee.payee}} beginning on {{DateMaker}}.
+            obligation of ${{ (+GrandTotals.psharetotal).toFixed(2) }}. Defendant ({{ PayorPayee.defendant }}) is
+            responsible for {{ (GrossPercentage.defendant * 100).toFixed(0) }}% of the
+            total obligation (${{ (+GrandTotals.dsharebasic).toFixed(2) }} share of basic obligation plus
+            ${{ (+GrandTotals.dshareexpenses).toFixed(2) }} for
+            expenses) and has a total child-support obligation of ${{ (+GrandTotals.dsharetotal).toFixed(2) }}.
+            {{ PayorPayee.payor }},
+            as the payor, shall receive a ${{ (+GrandTotals.payorexpenses).toFixed(2) }} credit for the additional
+            child-rearing
+            expenses that (s)he is paying out of pocket. {{ PayorPayee.payor }} shall pay ${{
+                (+GrandTotals.payorpays).toFixed(2)
+            }} per
+            month to {{ PayorPayee.payee }} beginning on {{ DateMaker }}.
           </div>
           <q-separator />
           <div class="row q-mx-sm q-mt-sm q-my-none justify-center items-center">
-            <DocxWorksheet
-              :plaintiff="{
-              name: plaintiffName, 
-              payorpayee: PayorPayee.plaintiff, 
-              gross: pIncome, 
+            <DocxWorksheet :plaintiff="{
+              name: plaintiffName,
+              payorpayee: PayorPayee.plaintiff,
+              gross: pIncome,
               deductions: pDeductions,
               adjgross: GrossIncome.plaintiff,
               supportshare: GrossPercentage.plaintiff,
@@ -194,27 +105,22 @@
               addexpshare: GrandTotals.pshareexpenses,
               partyobligation: GrandTotals.psharetotal,
               presumedsupport: +GrandTotals.psharetotal - +Expenses.ptotalexpenses
-            }"
-              :defendant="{
-              name: defendantName,
-              payorpayee: PayorPayee.defendant, 
-              gross: dIncome, 
-              deductions: dDeductions,
-              adjgross: GrossIncome.defendant,
-              supportshare: GrossPercentage.defendant,
-              basicshare: GrandTotals.dsharebasic,
-              healthins: dHealthInsurance,
-              extramedexp: dMedicalExpenses,
-              workexpense: dWorkExpenses,
-              totaladdexp: Expenses.dtotalexpenses,
-              addexpshare: GrandTotals.dshareexpenses,
-              partyobligation: GrandTotals.dsharetotal,
-              presumedsupport: +GrandTotals.dsharetotal - +Expenses.dtotalexpenses
-            }"
-              :payor="PayorPayee.payor"
-              :payee="PayorPayee.payee"
-              :combinedsupport="PresumedSupport"
-            />
+            }" :defendant="{
+  name: defendantName,
+  payorpayee: PayorPayee.defendant,
+  gross: dIncome,
+  deductions: dDeductions,
+  adjgross: GrossIncome.defendant,
+  supportshare: GrossPercentage.defendant,
+  basicshare: GrandTotals.dsharebasic,
+  healthins: dHealthInsurance,
+  extramedexp: dMedicalExpenses,
+  workexpense: dWorkExpenses,
+  totaladdexp: Expenses.dtotalexpenses,
+  addexpshare: GrandTotals.dshareexpenses,
+  partyobligation: GrandTotals.dsharetotal,
+  presumedsupport: +GrandTotals.dsharetotal - +Expenses.dtotalexpenses
+}" :payor="PayorPayee.payor" :payee="PayorPayee.payee" :combinedsupport="PresumedSupport" />
           </div>
         </div>
       </div>
@@ -332,23 +238,21 @@ export default {
       if (dtotalexpenses > 0) {
         if (this.dHealthInsurance > 0) {
           dhi =
-            "$" + (+this.dHealthInsurance).toFixed(2) + " in health insurance";
-          dt = dt + "A";
+            `\$${(+this.dHealthInsurance).toFixed(2)} in health insurance`;
+          dt = `${dt}A`;
         } else {
           dhi = "";
         }
         if (this.dMedicalExpenses > 0) {
           dme =
-            "$" +
-            (+this.dMedicalExpenses).toFixed(2) +
-            " in extraordinary medical expenses";
-          dt = dt + "B";
+            `\$${(+this.dMedicalExpenses).toFixed(2)} in extraordinary medical expenses`;
+          dt = `${dt}B`;
         } else {
           dme = "";
         }
         if (this.dWorkExpenses > 0) {
-          dwe = "$" + (+this.dWorkExpenses).toFixed(2) + " in work expenses";
-          dt = dt + "C";
+          dwe = `\$${(+this.dWorkExpenses).toFixed(2)} in work expenses`;
+          dt = `${dt}C`;
         } else {
           dwe = "";
         }
@@ -369,23 +273,21 @@ export default {
       if (ptotalexpenses > 0) {
         if (this.pHealthInsurance > 0) {
           phi =
-            "$" + (+this.pHealthInsurance).toFixed(2) + " in health insurance";
-          pt = pt + "A";
+            `\$${(+this.pHealthInsurance).toFixed(2)} in health insurance`;
+          pt = `${pt}A`;
         } else {
           phi = "";
         }
         if (this.pMedicalExpenses > 0) {
           pme =
-            "$" +
-            (+this.pMedicalExpenses).toFixed(2) +
-            " in extraordinary medical expenses";
-          pt = pt + "B";
+            `\$${(+this.pMedicalExpenses).toFixed(2)} in extraordinary medical expenses`;
+          pt = `${pt}B`;
         } else {
           pme = "";
         }
         if (this.pWorkExpenses > 0) {
-          pwe = "$" + (+this.pWorkExpenses).toFixed(2) + " in work expenses";
-          pt = pt + "C";
+          pwe = `\$${(+this.pWorkExpenses).toFixed(2)} in work expenses`;
+          pt = `${pt}C`;
         } else {
           pwe = "";
         }
