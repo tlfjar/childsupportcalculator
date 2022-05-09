@@ -64,10 +64,10 @@ function renderDoc() {
     // render the document (replace all occurences of {first_name} by John, {last_name} by Doe, ...)
     if (props.payor == "Plaintiff") {
       doc.render({
-        plaintiff: props.plaintiff.name,
-        defendant: props.defendant.name,
-        payee: props.payee,
-        payor: props.payor,
+        plaintiff: props.plaintiff.name.toUpperCase(),
+        defendant: props.defendant.name.toUpperCase(),
+        payee: props.payee.toUpperCase(),
+        payor: props.payor.toUpperCase(),
         combinedsu: `\$${(+props.combinedsupport).toFixed(2)}`,
 
         dgross: `\$${(+props.plaintiff.gross).toFixed(2)}`,
@@ -116,10 +116,10 @@ function renderDoc() {
       });
     } else {
       doc.render({
-        plaintiff: props.plaintiff.name,
-        defendant: props.defendant.name,
-        payee: props.payee,
-        payor: props.payor,
+        plaintiff: props.plaintiff.name.toUpperCase(),
+        defendant: props.defendant.name.toUpperCase(),
+        payee: props.payee.toUpperCase(),
+        payor: props.payor.toUpperCase(),
         combinedsu: `\$${(+props.combinedsupport).toFixed(2)}`,
 
         pgross: `\$${(+props.plaintiff.gross).toFixed(2)}`,
