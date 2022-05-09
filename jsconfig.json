@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
+    "jsx": "preserve",
     "paths": {
       "src/*": ["src/*"],
       "app/*": ["*"],
@@ -12,5 +13,6 @@
       "vue$": ["node_modules/vue/dist/vue.runtime.esm-bundler.js"]
     }
   },
-  "exclude": ["dist", ".quasar", "node_modules"]
+  "exclude": ["dist", ".quasar", "node_modules"],
+  
 }
