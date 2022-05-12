@@ -140,7 +140,7 @@ export default {
     return {
       plaintiffName: ref(null),
       defendantName: ref(null),
-      partiesChildren: ref({ label: "Select One", value: 0 }),
+      partiesChildren: ref({ label: "one", value: 0 }),
       childrenoptions: [
         { label: "one", value: 0 },
         { label: "two", value: 1 },
@@ -367,6 +367,8 @@ export default {
       let dsharebasic = this.PresumedSupport * this.GrossPercentage.defendant;
       let dshareexpenses =
         this.Expenses.totalexpenses * this.GrossPercentage.defendant;
+      let ppayorpays = Math.floor(psharetotal - this.Expenses.ptotalexpenses);
+      let dpayorpays = Math.floor(dsharetotal - this.Expenses.dtotalexpenses);
       if (this.pType.value === 0) {
         return {
           psharetotal,
@@ -375,7 +377,7 @@ export default {
           dsharebasic,
           dshareexpenses,
           dsharetotal,
-          payorpays: psharetotal - this.Expenses.ptotalexpenses,
+          payorpays: ppayorpays,
           payorexpenses: this.Expenses.ptotalexpenses
         };
       }
@@ -386,7 +388,7 @@ export default {
         dsharebasic,
         dshareexpenses,
         dsharetotal,
-        payorpays: dsharetotal - this.Expenses.dtotalexpenses,
+        payorpays: dpayorpays,
         payorexpenses: this.Expenses.dtotalexpenses
       };
     }
