@@ -185,6 +185,8 @@ export default {
       });
     },
     GrossIncome() {
+      console.log(this.pIncome)
+      console.log((this.pIncome - this.pDeductions))
       return {
         plaintiff: (this.pIncome - this.pDeductions) * this.pPayPeriod.value,
         defendant: (this.dIncome - this.dDeductions) * this.dPayPeriod.value,
