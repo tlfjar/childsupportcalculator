@@ -263,7 +263,8 @@ import DocxWorksheet from "src/components/docxWorksheet.vue";
 const plaintiffName = ref(null);
 const defendantName = ref(null);
 
-const partiesChildren = reactive({ label: "one", value: 0 });
+const partiesChildren = ref({ label: "one", value: 0 });
+
 const childrenoptions = [
   { label: "one", value: 0 },
   { label: "two", value: 1 },
@@ -276,8 +277,8 @@ const childrenoptions = [
 const pIncome = ref(0);
 const dIncome = ref(0);
 
-const pPayPeriod = reactive({ label: "Select One", value: 0 });
-const dPayPeriod = reactive({ label: "Select One", value: 0 });
+const pPayPeriod = ref({ label: "Select One", value: 0 });
+const dPayPeriod = ref({ label: "Select One", value: 0 });
 const options = [
   { label: "Weekly", value: 4.334 },
   { label: "Biweekly", value: 2.167 },
@@ -288,7 +289,7 @@ const options = [
 const pDeductions = ref(0);
 const dDeductions = ref(0);
 
-const pType = reactive({ label: "payee", value: 1 });
+const pType = ref({ label: "payee", value: 1 });
 const typeoptions = [
   { label: "payor", value: 0 },
   { label: "payee", value: 1 },
@@ -315,11 +316,11 @@ const dateMaker = computed(() => {
 });
 
 const plaintiffGrossIncome = computed(
-  () => (pIncome.value - pDeductions.value) * pPayPeriod.value
+  () => (pIncome.value - pDeductions.value) * pPayPeriod.value.value
 );
 
 const defendantGrossIncome = computed(
-  () => (dIncome.value - dDeductions.value) * dPayPeriod.value
+  () => (dIncome.value - dDeductions.value) * dPayPeriod.value.value
 );
 
 const combinedGrossIncome = computed(
@@ -345,7 +346,7 @@ const presumedSupport = computed(() => {
     (item) => item.maxIncome === roundedIncome.value
   );
 
-  return support.combinedSupport[partiesChildren.value];
+  return support.combinedSupport[partiesChildren.value.value];
 });
 
 const plaintiffTotalExpenses = computed(
@@ -361,7 +362,7 @@ const totalExpenses = computed(
 );
 
 const payorPayee = computed(() => {
-  if (pType.value === 0) {
+  if (pType.value.value === 0) {
     return {
       payor: "Plaintiff",
       payee: "Defendant",
@@ -515,7 +516,7 @@ const defendantPayorCost = computed(() =>
 );
 
 const payorCost = computed(() => {
-  if (pType.value === 0) {
+  if (pType.value.value === 0) {
     return plaintiffPayorCost.value;
   }
 
@@ -523,7 +524,7 @@ const payorCost = computed(() => {
 });
 
 const payorExpenses = computed(() => {
-  return pType.value === 0
+  return pType.value.value === 0
     ? plaintiffTotalExpenses.value
     : defendantTotalExpenses.value;
 });
