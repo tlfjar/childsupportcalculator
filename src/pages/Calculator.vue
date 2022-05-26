@@ -30,7 +30,7 @@
           <q-select
             filled
             class="col-12 q-my-sm"
-            v-model="pType"
+            v-model="plaintiffType"
             :options="typeoptions"
             label="Plaintiff is:"
           />
@@ -55,25 +55,25 @@
           <q-input
             outlined
             class="col-8 q-gutter-sm q-col-gutter-sm"
-            v-model="pIncome"
+            v-model="plaintiffIncome"
             label="Plaintiff Income (Gross)"
           />
           <q-select
             filled
             class="col-4 q-gutter-sm q-col-gutter-sm"
-            v-model="pPayPeriod"
+            v-model="plaintiffPayPeriod"
             :options="options"
             label="Pay Period"
           />
           <q-input
             outlined
             class="col-8 q-gutter-sm q-col-gutter-sm"
-            v-model="pDeductions"
+            v-model="plaintiffDeductions"
             label="Allowed Deductions (per pay period)"
           />
           <div class="col-4 q-gutter-sm q-col-gutter-sm" />
           <h6
-            v-if="partiesChildren.value === 0"
+            v-if="+partiesChildren.value.value === 0"
             class="col-12 q-mt-sm q-mb-none q-mx-sm"
           >
             Additional Expenses Paid for Minor child:
@@ -84,19 +84,19 @@
           <q-input
             outlined
             class="col-4 q-gutter-sm q-col-gutter-sm"
-            v-model="pHealthInsurance"
+            v-model="plaintiffHealthInsurance"
             label="Health insurance"
           />
           <q-input
             outlined
             class="col-4 q-gutter-sm q-col-gutter-sm"
-            v-model="pMedicalExpenses"
+            v-model="plaintiffMedicalExpenses"
             label="Medical expenses"
           />
           <q-input
             outlined
             class="col-4 q-gutter-sm q-col-gutter-sm"
-            v-model="pWorkExpenses"
+            v-model="plaintiffWorkExpenses"
             label="Work expenses"
           />
           <div class="col-4" />
@@ -114,25 +114,25 @@
           <q-input
             outlined
             class="col-8 q-gutter-sm q-col-gutter-sm"
-            v-model="dIncome"
+            v-model="defendantIncome"
             label="Defendant Income (Gross)"
           />
           <q-select
             filled
             class="col-4 q-gutter-sm q-col-gutter-sm"
-            v-model="dPayPeriod"
+            v-model="defendantPayPeriod"
             :options="options"
             label="Pay Period"
           />
           <q-input
             outlined
             class="col-8 q-gutter-sm q-col-gutter-sm"
-            v-model="dDeductions"
+            v-model="defendantDeductions"
             label="Allowed Deductions (per pay period)"
           />
           <div class="col-4 q-gutter-sm q-col-gutter-sm" />
           <h6
-            v-if="partiesChildren.value === 0"
+            v-if="+partiesChildren.value.value === 0"
             class="col-12 q-mt-sm q-mb-none q-mx-sm"
           >
             Additional Expenses Paid for Minor child:
@@ -143,19 +143,19 @@
           <q-input
             outlined
             class="col-4 q-gutter-sm q-col-gutter-sm"
-            v-model="dHealthInsurance"
+            v-model="defendantHealthInsurance"
             label="Health insurance"
           />
           <q-input
             outlined
             class="col-4 q-gutter-sm q-col-gutter-sm"
-            v-model="dMedicalExpenses"
+            v-model="defendantMedicalExpenses"
             label=" Medical expenses"
           />
           <q-input
             outlined
             class="col-4 q-gutter-sm q-col-gutter-sm"
-            v-model="dWorkExpenses"
+            v-model="defendantWorkExpenses"
             label="Work expenses"
           />
           <div class="col-4" />
@@ -183,14 +183,16 @@
             with a basic child-support obligation of ${{
               (+presumedSupport).toFixed(2)
             }}
-            for their {{ partiesChildren.label }} child(ren) per the Chart. The
-            court also finds that {{ finalSentence }}. Plaintiff ({{
-              payorPayee.plaintiff
-            }}) is responsible for
-            {{ (plaintiffGrossPercentage * 100).toFixed(0) }}% of the total
-            obligation (${{ (+plaintiffShareBasic).toFixed(2) }} share of basic
-            obligation plus ${{ (+plaintiffShareExpenses).toFixed(2) }} for
-            expenses) and has a total child-support obligation of ${{
+            for their {{ partiesChildren.label }} child(ren) per the Chart.
+            {{ finalSentence }} Plaintiff ({{ payorPayee.plaintiff }}) is
+            responsible for {{ (plaintiffGrossPercentage * 100).toFixed(0) }}%
+            of the total obligation (${{
+              (+plaintiffShareBasic).toFixed(2)
+            }}
+            share of basic obligation plus ${{
+              (+plaintiffShareExpenses).toFixed(2)
+            }}
+            for expenses) and has a total child-support obligation of ${{
               (+plaintiffShareTotal).toFixed(2)
             }}. Defendant ({{ payorPayee.defendant }}) is responsible for
             {{ (defendantGrossPercentage * 100).toFixed(0) }}% of the total
@@ -215,14 +217,14 @@
               :plaintiff="{
                 name: plaintiffName,
                 payorpayee: payorPayee.plaintiff,
-                gross: pIncome,
-                deductions: pDeductions,
+                gross: plaintiffIncome,
+                deductions: plaintiffDeductions,
                 adjgross: plaintiffGrossIncome,
                 supportshare: plaintiffGrossPercentage,
                 basicshare: plaintiffShareBasic,
-                healthins: pHealthInsurance,
-                extramedexp: pMedicalExpenses,
-                workexpense: pWorkExpenses,
+                healthins: plaintiffHealthInsurance,
+                extramedexp: plaintiffMedicalExpenses,
+                workexpense: plaintiffWorkExpenses,
                 totaladdexp: plaintiffTotalExpenses,
                 addexpshare: plaintiffShareExpenses,
                 partyobligation: plaintiffShareTotal,
@@ -231,14 +233,14 @@
               :defendant="{
                 name: defendantName,
                 payorpayee: payorPayee.defendant,
-                gross: dIncome,
-                deductions: dDeductions,
+                gross: defendantIncome,
+                deductions: defendantDeductions,
                 adjgross: defendantGrossIncome,
                 supportshare: defendantGrossPercentage,
                 basicshare: defendantShareBasic,
-                healthins: dHealthInsurance,
-                extramedexp: dMedicalExpenses,
-                workexpense: dWorkExpenses,
+                healthins: defendantHealthInsurance,
+                extramedexp: defendantMedicalExpenses,
+                workexpense: defendantWorkExpenses,
                 totaladdexp: defendantTotalExpenses,
                 addexpshare: defendantShareExpenses,
                 partyobligation: defendantShareTotal,
@@ -260,8 +262,8 @@ import { ref, reactive, computed } from "vue";
 import supportData from "../assets/support.json";
 import DocxWorksheet from "src/components/docxWorksheet.vue";
 
-const plaintiffName = ref(null);
-const defendantName = ref(null);
+const plaintiffName = ref("Plaintiff");
+const defendantName = ref("Defendant");
 
 const partiesChildren = ref({ label: "one", value: 0 });
 
@@ -274,11 +276,11 @@ const childrenoptions = [
   { label: "six", value: 5 },
 ];
 
-const pIncome = ref(0);
-const dIncome = ref(0);
+const plaintiffIncome = ref(0);
+const defendantIncome = ref(0);
 
-const pPayPeriod = ref({ label: "Select One", value: 0 });
-const dPayPeriod = ref({ label: "Select One", value: 0 });
+const plaintiffPayPeriod = ref({ label: "Select One", value: 0 });
+const defendantPayPeriod = ref({ label: "Select One", value: 0 });
 const options = [
   { label: "Weekly", value: 4.334 },
   { label: "Biweekly", value: 2.167 },
@@ -286,23 +288,23 @@ const options = [
   { label: "Monthly", value: 1 },
 ];
 
-const pDeductions = ref(0);
-const dDeductions = ref(0);
+const plaintiffDeductions = ref(0);
+const defendantDeductions = ref(0);
 
-const pType = ref({ label: "payee", value: 1 });
+const plaintiffType = ref({ label: "payee", value: 1 });
 const typeoptions = [
   { label: "payor", value: 0 },
   { label: "payee", value: 1 },
 ];
 
-const pHealthInsurance = ref(0);
-const dHealthInsurance = ref(0);
+const plaintiffHealthInsurance = ref(0);
+const defendantHealthInsurance = ref(0);
 
-const pMedicalExpenses = ref(0);
-const dMedicalExpenses = ref(0);
+const plaintiffMedicalExpenses = ref(0);
+const defendantMedicalExpenses = ref(0);
 
-const pWorkExpenses = ref(0);
-const dWorkExpenses = ref(0);
+const plaintiffWorkExpenses = ref(0);
+const defendantWorkExpenses = ref(0);
 
 const supportDate = ref(new Date());
 
@@ -316,45 +318,156 @@ const dateMaker = computed(() => {
 });
 
 const plaintiffGrossIncome = computed(
-  () => (pIncome.value - pDeductions.value) * pPayPeriod.value.value
+  () =>
+    (plaintiffIncome.value - plaintiffDeductions.value) *
+    plaintiffPayPeriod.value.value
 );
 
 const defendantGrossIncome = computed(
-  () => (dIncome.value - dDeductions.value) * dPayPeriod.value.value
+  () =>
+    (defendantIncome.value - defendantDeductions.value) *
+    defendantPayPeriod.value.value
 );
 
-const combinedGrossIncome = computed(
-  () => plaintiffGrossIncome.value + defendantGrossIncome.value
-);
+const combinedGrossIncome = computed(() => {
+  if (
+    payorPayee.value.payor == "Defendant" &&
+    +partiesChildren.value.value == 5 &&
+    defendantGrossIncome.value > 1050 &&
+    defendantGrossIncome.value < 1800
+  )
+    return defendantGrossIncome.value;
+  if (
+    payorPayee.value.payor == "Plaintiff" &&
+    +partiesChildren.value.value == 5 &&
+    plaintiffGrossIncome.value > 1050 &&
+    plaintiffGrossIncome.value < 1800
+  )
+    return plaintiffGrossIncome.value;
+  if (
+    payorPayee.value.payor == "Defendant" &&
+    +partiesChildren.value.value == 4 &&
+    defendantGrossIncome.value > 1050 &&
+    defendantGrossIncome.value < 1750
+  )
+    return defendantGrossIncome.value;
+  if (
+    payorPayee.value.payor == "Plaintiff" &&
+    +partiesChildren.value.value == 4 &&
+    plaintiffGrossIncome.value > 1050 &&
+    plaintiffGrossIncome.value < 1750
+  )
+    return plaintiffGrossIncome.value;
+  if (
+    payorPayee.value.payor == "Defendant" &&
+    +partiesChildren.value.value == 3 &&
+    defendantGrossIncome.value > 1050 &&
+    defendantGrossIncome.value < 1650
+  )
+    return defendantGrossIncome.value;
+  if (
+    payorPayee.value.payor == "Plaintiff" &&
+    +partiesChildren.value.value == 3 &&
+    plaintiffGrossIncome.value > 1050 &&
+    plaintiffGrossIncome.value < 1650
+  )
+    return plaintiffGrossIncome.value;
+  if (
+    payorPayee.value.payor == "Defendant" &&
+    +partiesChildren.value.value == 2 &&
+    defendantGrossIncome.value > 1050 &&
+    defendantGrossIncome.value < 1550
+  )
+    return defendantGrossIncome.value;
+  if (
+    payorPayee.value.payor == "Plaintiff" &&
+    +partiesChildren.value.value == 2 &&
+    plaintiffGrossIncome.value > 1050 &&
+    plaintiffGrossIncome.value < 1550
+  )
+    return plaintiffGrossIncome.value;
+  if (
+    payorPayee.value.payor == "Defendant" &&
+    +partiesChildren.value.value == 1 &&
+    defendantGrossIncome.value > 1050 &&
+    defendantGrossIncome.value < 1400
+  )
+    return defendantGrossIncome.value;
+  if (
+    payorPayee.value.payor == "Plaintiff" &&
+    +partiesChildren.value.value == 1 &&
+    plaintiffGrossIncome.value > 1050 &&
+    plaintiffGrossIncome.value < 1400
+  )
+    return plaintiffGrossIncome.value;
+  if (
+    payorPayee.value.payor == "Defendant" &&
+    +partiesChildren.value.value == 0 &&
+    defendantGrossIncome.value > 1050 &&
+    defendantGrossIncome.value < 1200
+  )
+    return defendantGrossIncome.value;
+  if (
+    payorPayee.value.payor == "Plaintiff" &&
+    +partiesChildren.value.value == 0 &&
+    plaintiffGrossIncome.value > 1050 &&
+    plaintiffGrossIncome.value < 1200
+  )
+    return plaintiffGrossIncome.value;
+  return plaintiffGrossIncome.value + defendantGrossIncome.value;
+});
 
-const plaintiffGrossPercentage = computed(
-  () => plaintiffGrossIncome.value / combinedGrossIncome.value
-);
+const plaintiffGrossPercentage = computed(() => {
+  const value =
+    plaintiffGrossIncome.value / combinedGrossIncome.value > 1
+      ? 0
+      : plaintiffGrossIncome.value / combinedGrossIncome.value;
+  return value;
+});
 
-const defendantGrossPercentage = computed(
-  () => defendantGrossIncome.value / combinedGrossIncome.value
-);
+const defendantGrossPercentage = computed(() => {
+  const value =
+    defendantGrossIncome.value / combinedGrossIncome.value > 1
+      ? 0
+      : defendantGrossIncome.value / combinedGrossIncome.value;
+  return value;
+});
 
 const roundedIncome = computed(
   () => Math.floor(combinedGrossIncome.value / 50) * 50
 );
 
 const presumedSupport = computed(() => {
-  if (roundedIncome.value <= 1050) return 125;
+  if (
+    payorPayee.value.payor == "Defendant" &&
+    defendantGrossIncome.value <= 1050
+  )
+    return 125;
+  if (
+    payorPayee.value.payor == "Plaintiff" &&
+    plaintiffGrossIncome.value <= 1050
+  )
+    return 125;
 
   const support = supportData.find(
     (item) => item.maxIncome === roundedIncome.value
   );
 
-  return support.combinedSupport[partiesChildren.value.value];
+  return support.combinedSupport[+partiesChildren.value.value];
 });
 
 const plaintiffTotalExpenses = computed(
-  () => +pHealthInsurance.value + +pMedicalExpenses.value + +pWorkExpenses.value
+  () =>
+    +plaintiffHealthInsurance.value +
+    +plaintiffMedicalExpenses.value +
+    +plaintiffWorkExpenses.value
 );
 
 const defendantTotalExpenses = computed(
-  () => +dHealthInsurance.value + +dMedicalExpenses.value + +dWorkExpenses.value
+  () =>
+    +defendantHealthInsurance.value +
+    +defendantMedicalExpenses.value +
+    +defendantWorkExpenses.value
 );
 
 const totalExpenses = computed(
@@ -362,7 +475,7 @@ const totalExpenses = computed(
 );
 
 const payorPayee = computed(() => {
-  if (pType.value.value === 0) {
+  if (plaintiffType.value.value === 0) {
     return {
       payor: "Plaintiff",
       payee: "Defendant",
@@ -384,18 +497,18 @@ const plaintiffSentence = computed(() => {
 
   const ptype = payorPayee.value.plaintiff;
 
-  const phi = pHealthInsurance.value
-    ? `$${(+pHealthInsurance.value).toFixed(2)} in health insurance`
+  const phi = plaintiffHealthInsurance.value
+    ? `$${(+plaintiffHealthInsurance.value).toFixed(2)} in health insurance`
     : "";
 
-  const pme = dMedicalExpenses.value
-    ? `$${(+dMedicalExpenses.value).toFixed(
+  const pme = defendantMedicalExpenses.value
+    ? `$${(+defendantMedicalExpenses.value).toFixed(
         2
       )} in extraordinary medical expenses`
     : "";
 
-  const pwe = dWorkExpenses.value
-    ? `$${(+dWorkExpenses.value).toFixed(2)} in work expenses`
+  const pwe = defendantWorkExpenses.value
+    ? `$${(+defendantWorkExpenses.value).toFixed(2)} in work expenses`
     : "";
 
   if (phi && pme && pwe) {
@@ -422,18 +535,18 @@ const defendantSentence = computed(() => {
 
   const dtype = payorPayee.value.defendant;
 
-  const dhi = dHealthInsurance.value
-    ? `$${(+dHealthInsurance.value).toFixed(2)} in health insurance`
+  const dhi = defendantHealthInsurance.value
+    ? `$${(+defendantHealthInsurance.value).toFixed(2)} in health insurance`
     : "";
 
-  const dme = dMedicalExpenses.value
-    ? `$${(+dMedicalExpenses.value).toFixed(
+  const dme = defendantMedicalExpenses.value
+    ? `$${(+defendantMedicalExpenses.value).toFixed(
         2
       )} in extraordinary medical expenses`
     : "";
 
-  const dwe = dWorkExpenses.value
-    ? `$${(+dWorkExpenses.value).toFixed(2)} in work expenses`
+  const dwe = defendantWorkExpenses.value
+    ? `$${(+defendantWorkExpenses.value).toFixed(2)} in work expenses`
     : "";
 
   if (dhi && dme && dwe) {
@@ -459,19 +572,19 @@ const finalSentence = computed(() => {
   if (totalExpenses.value <= 0) return "";
 
   if (plaintiffTotalExpenses.value > 0 && defendantTotalExpenses.value > 0) {
-    return `${plaintiffSentence.value}; and ${
+    return `The court also finds that ${plaintiffSentence.value}, and ${
       defendantSentence.value
     }; for a total of $${totalExpenses.value.toFixed(
       2
-    )} in additional child-rearing expenses`;
+    )} in additional child-rearing expenses.`;
   }
 
   if (plaintiffTotalExpenses.value > 0) {
-    return plaintiffSentence.value;
+    return `The Court also finds that ${plaintiffSentence.value}.`;
   }
 
   if (defendantTotalExpenses.value > 0) {
-    return defendantSentence.value;
+    return `The Court also finds that ${defendantSentence.value}.`;
   }
 
   return "";
@@ -516,7 +629,7 @@ const defendantPayorCost = computed(() =>
 );
 
 const payorCost = computed(() => {
-  if (pType.value.value === 0) {
+  if (plaintiffType.value.value === 0) {
     return plaintiffPayorCost.value;
   }
 
@@ -524,7 +637,7 @@ const payorCost = computed(() => {
 });
 
 const payorExpenses = computed(() => {
-  return pType.value.value === 0
+  return plaintiffType.value.value === 0
     ? plaintiffTotalExpenses.value
     : defendantTotalExpenses.value;
 });
