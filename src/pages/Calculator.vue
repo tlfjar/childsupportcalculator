@@ -169,15 +169,21 @@
           class="col-gt-lg-6 col-lt-lg-12 q-mb-none q-mx-sm"
           style="min-height: 280px"
         >
-          <div class="row q-mx-sm text-h5">Support Paragraph:</div>
+          <div class="row q-mx-sm text-h5">
+            Support Paragraph{{ payorIncomeOnly }}:
+          </div>
           <q-separator />
-          <div class="row q-mx-sm q-my-xs text-justify">
-            The court has determined that {{ payorPayee.payor }} (payor) earns a
-            gross income of ${{ (+plaintiffGrossIncome).toFixed(2) }} per month
-            and {{ payorPayee.payee }} (payee) earns a gross income of ${{
-              (+defendantGrossIncome).toFixed(2)
+          <div
+            v-if="presumedSupport != 125 && payorIncomeOnly == 1"
+            class="row q-mx-sm q-my-xs text-justify"
+          >
+            The court has determined that Plaintiff ({{ payorPayee.plaintiff }})
+            earns a gross income of ${{
+              (+plaintiffGrossIncome).toFixed(2)
             }}
-            per month. Therefore, the parents’ combined gross income is ${{
+            per month and Defendant ({{ payorPayee.defendant }}) earns a gross
+            income of ${{ (+defendantGrossIncome).toFixed(2) }} per month.
+            Therefore, the parents’ combined gross income is ${{
               (+combinedGrossIncome).toFixed(2)
             }}
             with a basic child-support obligation of ${{
@@ -208,6 +214,31 @@
               (+payorCost).toFixed(2)
             }}
             per month to {{ payorPayee.payee }} beginning on {{ dateMaker }}.
+          </div>
+          <div
+            v-if="presumedSupport == 125"
+            class="row q-mx-sm q-my-xs text-justify"
+          >
+            The court has determined that {{ payorPayee.payor }} (payor) earns a
+            gross income of ${{ (+combinedGrossIncome).toFixed(2) }} per month.
+            Therefore, {{ payorPayee.payor }} (payor) is ordered to pay the
+            minimum support amount of $125.00 per month to
+            {{ payorPayee.payee }} beginning on {{ dateMaker }}.
+          </div>
+          <div
+            v-if="presumedSupport != 125 && payorIncomeOnly == 0"
+            class="row q-mx-sm q-my-xs text-justify"
+          >
+            The court has determined that {{ payorPayee.payor }} (payor) earns a
+            gross income of ${{ (+combinedGrossIncome).toFixed(2) }} per month.
+            Because this income falls into the "shaded area" on the "Arkansas
+            Family Support Chart of Basic Child Support Obligations," support
+            must be callculated based on {{ payorPayee.payor }}'s (payor's)
+            income alone. {{ payorPayee.payor }} (payor) therefore has a basic
+            child-support obligation of ${{ (+presumedSupport).toFixed(2) }} for
+            the parties' {{ partiesChildren.label }} child(ren) per the Chart.
+            {{ payorPayee.payor }} shall pay said amount monthly to
+            {{ payorPayee.payee }}, beginning on {{ dateMaker }}.
           </div>
           <q-separator />
           <div
@@ -334,14 +365,14 @@ const combinedGrossIncome = computed(() => {
     payorPayee.value.payor == "Defendant" &&
     +partiesChildren.value.value == 5 &&
     defendantGrossIncome.value > 1050 &&
-    defendantGrossIncome.value < 1800
+    defendantGrossIncome.value < 1850
   )
     return defendantGrossIncome.value;
   if (
     payorPayee.value.payor == "Plaintiff" &&
     +partiesChildren.value.value == 5 &&
     plaintiffGrossIncome.value > 1050 &&
-    plaintiffGrossIncome.value < 1800
+    plaintiffGrossIncome.value < 1850
   )
     return plaintiffGrossIncome.value;
   if (
@@ -436,7 +467,18 @@ const defendantGrossPercentage = computed(() => {
 const roundedIncome = computed(
   () => Math.floor(combinedGrossIncome.value / 50) * 50
 );
-
+const payorIncomeOnly = computed(() => {
+  const value =
+    (combinedGrossIncome.value >= 1200 && partiesChildren.value.value == 0) ||
+    (combinedGrossIncome.value >= 1400 && partiesChildren.value.value == 1) ||
+    (combinedGrossIncome.value >= 1550 && partiesChildren.value.value == 2) ||
+    (combinedGrossIncome.value >= 1650 && partiesChildren.value.value == 3) ||
+    (combinedGrossIncome.value >= 1750 && partiesChildren.value.value == 4) ||
+    (combinedGrossIncome.value >= 1850 && partiesChildren.value.value == 5)
+      ? 1
+      : 0;
+  return value;
+});
 const presumedSupport = computed(() => {
   if (
     payorPayee.value.payor == "Defendant" &&
