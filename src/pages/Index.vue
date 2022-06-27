@@ -3,7 +3,8 @@
     <img
       alt="Troutt Law Firm"
       src="~assets/TLFlogo.svg"
-      style="width: 200px; height: 200px"
+      class="col-12"
+      style="width: 300px; height: 300px"
     />
   </q-page>
 </template>
