@@ -169,7 +169,11 @@
           <div class="row q-mx-sm text-h5">Support Paragraph:</div>
           <q-separator />
           <div
-            v-if="presumedSupport != 125 && payorIncomeOnly == 1"
+            v-if="
+              presumedSupport != 125 &&
+              incomeExceedsChart == false &&
+              payorIncomeOnly == 1
+            "
             class="row q-mx-sm q-my-xs text-justify"
           >
             The court has determined that Plaintiff ({{ payorPayee.plaintiff }})
@@ -234,6 +238,48 @@
             the parties' {{ partiesChildren.label }} {{ childOrChildren }} per
             the Chart. {{ payorPayee.payor }} shall pay said amount monthly to
             {{ payorPayee.payee }}, beginning on {{ dateMaker }}.
+          </div>
+          <div
+            v-if="incomeExceedsChart == true"
+            class="row q-mx-sm q-my-xs text-justify"
+          >
+            The court has determined that Plaintiff ({{ payorPayee.plaintiff }})
+            earns a gross income of ${{
+              (+plaintiffGrossIncome).toFixed(2)
+            }}
+            per month and Defendant ({{ payorPayee.defendant }}) earns a gross
+            income of ${{ (+defendantGrossIncome).toFixed(2) }} per month.
+            Therefore, the parents’ combined gross income is ${{
+              (+combinedGrossIncome).toFixed(2)
+            }}. Said income exceeds the maximum income on the "Arkansas Family
+            Support Chart of Basic Child Support Obligations," which is
+            $30,000.00. The maximum support value for the parties'
+            {{ partiesChildren.label }} {{ childOrChildren }} per the chart is
+            {{ (+presumedSupport).toFixed(2) }}. {{ finalSentence }} Plaintiff
+            ({{ payorPayee.plaintiff }}) is responsible for
+            {{ (plaintiffGrossPercentage * 100).toFixed(0) }}% of the total
+            obligation (${{ (+plaintiffShareBasic).toFixed(2) }} share of basic
+            obligation plus ${{ (+plaintiffShareExpenses).toFixed(2) }} for
+            expenses) and has a total child-support obligation of ${{
+              (+plaintiffShareTotal).toFixed(2)
+            }}. Defendant ({{ payorPayee.defendant }}) is responsible for
+            {{ (defendantGrossPercentage * 100).toFixed(0) }}% of the total
+            obligation (${{ (+defendantShareBasic).toFixed(2) }} share of basic
+            obligation plus ${{ (+defendantShareExpenses).toFixed(2) }} for
+            expenses) and has a total child-support obligation of ${{
+              (+defendantShareTotal).toFixed(2)
+            }}. {{ payorPayee.payor }}, as the payor, shall receive a ${{
+              (+payorExpenses).toFixed(2)
+            }}
+            credit for the additional child-rearing expenses that (s)he is
+            paying out of pocket. {{ payorPayee.payor }} shall pay ${{
+              (+payorCost).toFixed(2)
+            }}
+            per month to {{ payorPayee.payee }} beginning on {{ dateMaker }}.
+            Further findings with regard to the parties' remaining ${{
+              (+combinedGrossIncome - 30000).toFixed(2)
+            }}
+            of income shall be addressed in the Paragraphs hereinbelow.
           </div>
           <q-separator />
           <div
@@ -431,6 +477,10 @@ const combinedGrossIncome = computed(() =>
     : payorIncome.value
 );
 
+const incomeExceedsChart = computed(() =>
+  Boolean(combinedGrossIncome.value > 30000)
+);
+
 const plaintiffGrossPercentage = computed(() =>
   plaintiffGrossIncome.value / combinedGrossIncome.value >= 1
     ? 1
@@ -448,7 +498,9 @@ const roundedIncome = computed(
 );
 
 const supportSearch = computed(() =>
-  supportData.find((item) => item.maxIncome === roundedIncome.value)
+  incomeExceedsChart.value
+    ? supportData.find((item) => item.maxIncome === 30000)
+    : supportData.find((item) => item.maxIncome === roundedIncome.value)
 );
 const presumedSupport = computed(() => {
   if (
