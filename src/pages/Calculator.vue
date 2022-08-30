@@ -228,7 +228,7 @@
             gross income of ${{ (+combinedGrossIncome).toFixed(2) }} per month.
             Because this income falls into the "shaded area" on the "Arkansas
             Family Support Chart of Basic Child Support Obligations," support
-            must be callculated based on {{ payorPayee.payor }}'s (payor's)
+            must be calculated based on {{ payorPayee.payor }}'s (payor's)
             income alone. {{ payorPayee.payor }} (payor) therefore has a basic
             child-support obligation of ${{ (+presumedSupport).toFixed(2) }} for
             the parties' {{ partiesChildren.label }} {{ childOrChildren }} per
@@ -245,7 +245,7 @@
                   ? {
                       name: plaintiffName,
                       payorpayee: payorPayee.plaintiff,
-                      gross: plaintiffIncome,
+                      gross: plaintiffIncome * plaintiffPayPeriod.value,
                       deductions: plaintiffDeductions,
                       adjgross: plaintiffGrossIncome,
                       supportshare: plaintiffGrossPercentage,
@@ -256,8 +256,7 @@
                       totaladdexp: plaintiffTotalExpenses,
                       addexpshare: plaintiffShareExpenses,
                       partyobligation: plaintiffShareTotal,
-                      presumedsupport:
-                        +plaintiffShareTotal - +plaintiffTotalExpenses,
+                      presumedsupport: +plaintiffPayorCost,
                     }
                   : {
                       name: plaintiffName,
@@ -299,13 +298,12 @@
                       totaladdexp: defendantTotalExpenses,
                       addexpshare: defendantShareExpenses,
                       partyobligation: defendantShareTotal,
-                      presumedsupport:
-                        +defendantShareTotal - +defendantTotalExpenses,
+                      presumedsupport: +defendantPayorCost,
                     }
                   : {
                       name: defendantName,
                       payorpayee: payorPayee.defendant,
-                      gross: defendantIncome,
+                      gross: defendantIncome * defendantPayPeriod.value,
                       deductions: defendantDeductions,
                       adjgross: defendantGrossIncome,
                       supportshare:
